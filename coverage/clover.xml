@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1759307694456" clover="3.2.0">
-  <project timestamp="1759307694456" name="All files">
-    <metrics statements="110" coveredstatements="71" conditionals="24" coveredconditionals="18" methods="32" coveredmethods="22" elements="166" coveredelements="111" complexity="0" loc="110" ncloc="110" packages="3" files="7" classes="7"/>
+<coverage generated="1759312009098" clover="3.2.0">
+  <project timestamp="1759312009098" name="All files">
+    <metrics statements="110" coveredstatements="68" conditionals="24" coveredconditionals="18" methods="32" coveredmethods="21" elements="166" coveredelements="107" complexity="0" loc="110" ncloc="110" packages="3" files="7" classes="7"/>
     <package name="components">
-      <metrics statements="12" coveredstatements="12" conditionals="4" coveredconditionals="4" methods="4" coveredmethods="4"/>
+      <metrics statements="12" coveredstatements="9" conditionals="4" coveredconditionals="4" methods="4" coveredmethods="3"/>
       <file name="Footer.js" path="C:\Users\dz28l\Documents\GitHub\CS4218\cs4218-2510-ecom-project-team014\client\src\components\Footer.js">
         <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
         <line num="4" count="3" type="stmt"/>
         <line num="5" count="29" type="stmt"/>
       </file>
       <file name="Header.js" path="C:\Users\dz28l\Documents\GitHub\CS4218\cs4218-2510-ecom-project-team014\client\src\components\Header.js">
-        <metrics statements="10" coveredstatements="10" conditionals="4" coveredconditionals="4" methods="3" coveredmethods="3"/>
+        <metrics statements="10" coveredstatements="7" conditionals="4" coveredconditionals="4" methods="3" coveredmethods="2"/>
         <line num="10" count="3" type="stmt"/>
-        <line num="11" count="37" type="stmt"/>
-        <line num="12" count="37" type="stmt"/>
-        <line num="13" count="37" type="stmt"/>
-        <line num="14" count="37" type="stmt"/>
-        <line num="15" count="1" type="stmt"/>
-        <line num="20" count="1" type="stmt"/>
-        <line num="21" count="1" type="stmt"/>
-        <line num="23" count="37" type="stmt"/>
-        <line num="64" count="9" type="stmt"/>
+        <line num="11" count="45" type="stmt"/>
+        <line num="12" count="45" type="stmt"/>
+        <line num="13" count="45" type="stmt"/>
+        <line num="14" count="45" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="20" count="0" type="stmt"/>
+        <line num="21" count="0" type="stmt"/>
+        <line num="23" count="45" type="stmt"/>
+        <line num="64" count="18" type="stmt"/>
       </file>
     </package>
     <package name="pages.Auth">

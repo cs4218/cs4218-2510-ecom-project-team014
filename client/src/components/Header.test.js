@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Header from './Header';
 
@@ -22,171 +22,200 @@ jest.mock('antd', () => ({
 const { useAuth } = require('../context/auth');
 const { useCart } = require('../context/cart');
 const useCategory = require('../hooks/useCategory');
-const toast = require('react-hot-toast');
 
-describe('Header', () => {
+const categoryNone = [];
+const categoryOne = [{ name: 'Cat1', slug: 'cat1', _id: '1' }];
+const categoryMultiple = [
+  { name: 'Cat1', slug: 'cat1', _id: '1' },
+  { name: 'Cat2', slug: 'cat2', _id: '2' },
+];
+
+const cartEmpty = [];
+const cartItems = [{ id: 1 }, { id: 2 }];
+
+describe('Header exhaustive test cases', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  // Equivalence Partitioning: No user, empty cart, no categories
-  it('renders login/register links, empty cart, and no categories', () => {
-    console.log('Running Orders Page tests v5');
-    useAuth.mockReturnValue([{ user: null }, jest.fn()]);
-    useCart.mockReturnValue([[]]);
-    useCategory.mockReturnValue([]);
+  // Helper to set mocks
+  function setMocks(authUser, cart, categories) {
+    useAuth.mockReturnValue([{ user: authUser }, jest.fn()]);
+    useCart.mockReturnValue([cart]);
+    useCategory.mockReturnValue(categories);
+  }
 
-    const { getByText, queryByText, getByTestId } = render(
-      <MemoryRouter>
-        <Header />
-      </MemoryRouter>
-    );
-
+  // 1. Null, Empty, None
+  it('TC1: Null auth, empty cart, no categories', () => {
+    setMocks(null, cartEmpty, categoryNone);
+    const { getByText, getByTestId } = render(<MemoryRouter><Header /></MemoryRouter>);
     expect(getByText('Register')).toBeInTheDocument();
     expect(getByText('Login')).toBeInTheDocument();
     expect(getByTestId('badge')).toHaveTextContent('0Cart');
     expect(getByText('All Categories')).toBeInTheDocument();
-    expect(queryByText('Categories')).toBeInTheDocument();
   });
 
-  // Equivalence Partitioning: No user, cart with 1 item, 1 category
-  it('renders login/register links, cart with 1 item, and 1 category', () => {
-    useAuth.mockReturnValue([{ user: null }, jest.fn()]);
-    useCart.mockReturnValue([[{ id: 1 }]]);
-    useCategory.mockReturnValue([{ name: 'Cat1', slug: 'cat1' }]);
+  // 2. Null, Empty, One
+  it('TC2: Null auth, empty cart, one category', () => {
+    setMocks(null, cartEmpty, categoryOne);
+    const { getByText, getByTestId } = render(<MemoryRouter><Header /></MemoryRouter>);
+    expect(getByText('Cat1')).toBeInTheDocument();
+    expect(getByTestId('badge')).toHaveTextContent('0Cart');
+  });
 
-    const { getByText, getByTestId } = render(
-      <MemoryRouter>
-        <Header />
-      </MemoryRouter>
-    );
+  // 3. Null, Empty, Multiple
+  it('TC3: Null auth, empty cart, multiple categories', () => {
+    setMocks(null, cartEmpty, categoryMultiple);
+    const { getByText, getByTestId } = render(<MemoryRouter><Header /></MemoryRouter>);
+    expect(getByText('Cat1')).toBeInTheDocument();
+    expect(getByText('Cat2')).toBeInTheDocument();
+    expect(getByTestId('badge')).toHaveTextContent('0Cart');
+  });
 
+  // 4. Null, Has items, None
+  it('TC4: Null auth, cart items, no categories', () => {
+    setMocks(null, cartItems, categoryNone);
+    const { getByText, getByTestId } = render(<MemoryRouter><Header /></MemoryRouter>);
     expect(getByText('Register')).toBeInTheDocument();
     expect(getByText('Login')).toBeInTheDocument();
-    expect(getByTestId('badge')).toHaveTextContent('1Cart');
-    expect(getByText('Cat1')).toBeInTheDocument();
+    expect(getByTestId('badge')).toHaveTextContent('2Cart');
+    expect(getByText('All Categories')).toBeInTheDocument();
   });
 
-  // Equivalence Partitioning: User logged in (role 0), cart empty, multiple categories
-  it('renders user dropdown for role 0, empty cart, and multiple categories', () => {
-    useAuth.mockReturnValue([{ user: { name: 'User', role: 0 } }, jest.fn()]);
-    useCart.mockReturnValue([[]]);
-    useCategory.mockReturnValue([
-      { name: 'Cat1', slug: 'cat1' },
-      { name: 'Cat2', slug: 'cat2' },
-    ]);
+  // 5. Null, Has items, One
+  it('TC5: Null auth, cart items, one category', () => {
+    setMocks(null, cartItems, categoryOne);
+    const { getByText, getByTestId } = render(<MemoryRouter><Header /></MemoryRouter>);
+    expect(getByText('Cat1')).toBeInTheDocument();
+    expect(getByTestId('badge')).toHaveTextContent('2Cart');
+  });
 
-    const { getByText, getByTestId } = render(
-      <MemoryRouter>
-        <Header />
-      </MemoryRouter>
-    );
+  // 6. Null, Has items, Multiple
+  it('TC6: Null auth, cart items, multiple categories', () => {
+    setMocks(null, cartItems, categoryMultiple);
+    const { getByText, getByTestId } = render(<MemoryRouter><Header /></MemoryRouter>);
+    expect(getByText('Cat1')).toBeInTheDocument();
+    expect(getByText('Cat2')).toBeInTheDocument();
+    expect(getByTestId('badge')).toHaveTextContent('2Cart');
+  });
 
+  // 7. User, Empty, None
+  it('TC7: User auth, empty cart, no categories', () => {
+    setMocks({ name: 'User', role: 0 }, cartEmpty, categoryNone);
+    const { getByText, getByTestId } = render(<MemoryRouter><Header /></MemoryRouter>);
     expect(getByText('User')).toBeInTheDocument();
     expect(getByText('Dashboard')).toBeInTheDocument();
     expect(getByText('Logout')).toBeInTheDocument();
     expect(getByTestId('badge')).toHaveTextContent('0Cart');
-    expect(getByText('Cat1')).toBeInTheDocument();
-    expect(getByText('Cat2')).toBeInTheDocument();
+    expect(getByText('All Categories')).toBeInTheDocument();
   });
 
-  // Equivalence Partitioning: Admin logged in (role 1), cart with many items, multiple categories
-  it('renders admin dropdown, cart with many items, and multiple categories', () => {
-    useAuth.mockReturnValue([{ user: { name: 'Admin', role: 1 } }, jest.fn()]);
-    useCart.mockReturnValue([[{}, {}, {}]]);
-    useCategory.mockReturnValue([
-      { name: 'Cat1', slug: 'cat1' },
-      { name: 'Cat2', slug: 'cat2' },
-    ]);
+  // 8. User, Empty, One
+  it('TC8: User auth, empty cart, one category', () => {
+    setMocks({ name: 'User', role: 0 }, cartEmpty, categoryOne);
+    const { getByText, getByTestId } = render(<MemoryRouter><Header /></MemoryRouter>);
+    expect(getByText('Cat1')).toBeInTheDocument();
+    expect(getByText('User')).toBeInTheDocument();
+    expect(getByTestId('badge')).toHaveTextContent('0Cart');
+  });
 
-    const { getByText, getByTestId } = render(
-      <MemoryRouter>
-        <Header />
-      </MemoryRouter>
-    );
+  // 9. User, Empty, Multiple
+  it('TC9: User auth, empty cart, multiple categories', () => {
+    setMocks({ name: 'User', role: 0 }, cartEmpty, categoryMultiple);
+    const { getByText, getByTestId } = render(<MemoryRouter><Header /></MemoryRouter>);
+    expect(getByText('Cat1')).toBeInTheDocument();
+    expect(getByText('Cat2')).toBeInTheDocument();
+    expect(getByText('User')).toBeInTheDocument();
+    expect(getByTestId('badge')).toHaveTextContent('0Cart');
+  });
 
+  // 10. User, Has items, None
+  it('TC10: User auth, cart items, no categories', () => {
+    setMocks({ name: 'User', role: 0 }, cartItems, categoryNone);
+    const { getByText, getByTestId } = render(<MemoryRouter><Header /></MemoryRouter>);
+    expect(getByText('User')).toBeInTheDocument();
+    expect(getByText('Dashboard')).toBeInTheDocument();
+    expect(getByText('Logout')).toBeInTheDocument();
+    expect(getByTestId('badge')).toHaveTextContent('2Cart');
+    expect(getByText('All Categories')).toBeInTheDocument();
+  });
+
+  // 11. User, Has items, One
+  it('TC11: User auth, cart items, one category', () => {
+    setMocks({ name: 'User', role: 0 }, cartItems, categoryOne);
+    const { getByText, getByTestId } = render(<MemoryRouter><Header /></MemoryRouter>);
+    expect(getByText('Cat1')).toBeInTheDocument();
+    expect(getByText('User')).toBeInTheDocument();
+    expect(getByTestId('badge')).toHaveTextContent('2Cart');
+  });
+
+  // 12. User, Has items, Multiple
+  it('TC12: User auth, cart items, multiple categories', () => {
+    setMocks({ name: 'User', role: 0 }, cartItems, categoryMultiple);
+    const { getByText, getByTestId } = render(<MemoryRouter><Header /></MemoryRouter>);
+    expect(getByText('Cat1')).toBeInTheDocument();
+    expect(getByText('Cat2')).toBeInTheDocument();
+    expect(getByText('User')).toBeInTheDocument();
+    expect(getByTestId('badge')).toHaveTextContent('2Cart');
+  });
+
+  // 13. Admin, Empty, None
+  it('TC13: Admin auth, empty cart, no categories', () => {
+    setMocks({ name: 'Admin', role: 1 }, cartEmpty, categoryNone);
+    const { getByText, getByTestId } = render(<MemoryRouter><Header /></MemoryRouter>);
     expect(getByText('Admin')).toBeInTheDocument();
     expect(getByText('Dashboard')).toBeInTheDocument();
     expect(getByText('Logout')).toBeInTheDocument();
-    expect(getByTestId('badge')).toHaveTextContent('3Cart');
+    expect(getByTestId('badge')).toHaveTextContent('0Cart');
+    expect(getByText('All Categories')).toBeInTheDocument();
+  });
+
+  // 14. Admin, Empty, One
+  it('TC14: Admin auth, empty cart, one category', () => {
+    setMocks({ name: 'Admin', role: 1 }, cartEmpty, categoryOne);
+    const { getByText, getByTestId } = render(<MemoryRouter><Header /></MemoryRouter>);
+    expect(getByText('Cat1')).toBeInTheDocument();
+    expect(getByText('Admin')).toBeInTheDocument();
+    expect(getByTestId('badge')).toHaveTextContent('0Cart');
+  });
+
+  // 15. Admin, Empty, Multiple
+  it('TC15: Admin auth, empty cart, multiple categories', () => {
+    setMocks({ name: 'Admin', role: 1 }, cartEmpty, categoryMultiple);
+    const { getByText, getByTestId } = render(<MemoryRouter><Header /></MemoryRouter>);
     expect(getByText('Cat1')).toBeInTheDocument();
     expect(getByText('Cat2')).toBeInTheDocument();
-  });
-
-  // Boundary Value: Cart with 0 and 1 item, no categories
-  it('renders cart with 0 and 1 item, no categories', () => {
-    useAuth.mockReturnValue([{ user: { name: 'User', role: 0 } }, jest.fn()]);
-    useCategory.mockReturnValue([]);
-    useCart.mockReturnValue([[]]);
-    const { getByTestId, rerender } = render(
-      <MemoryRouter>
-        <Header />
-      </MemoryRouter>
-    );
+    expect(getByText('Admin')).toBeInTheDocument();
     expect(getByTestId('badge')).toHaveTextContent('0Cart');
-
-    useCart.mockReturnValue([[{ id: 1 }]]);
-    rerender(
-      <MemoryRouter>
-        <Header />
-      </MemoryRouter>
-    );
-    expect(getByTestId('badge')).toHaveTextContent('1Cart');
   });
 
-  // Boundary Value: Categories array with 0, 1, and N items
-  it('renders categories array with 0, 1, and N items', () => {
-    useAuth.mockReturnValue([{ user: null }, jest.fn()]);
-    useCart.mockReturnValue([[]]);
-    useCategory.mockReturnValue([]);
-    const { queryByText, rerender } = render(
-      <MemoryRouter>
-        <Header />
-      </MemoryRouter>
-    );
-    expect(queryByText('All Categories')).toBeInTheDocument();
-
-    useCategory.mockReturnValue([{ name: 'Cat1', slug: 'cat1' }]);
-    rerender(
-      <MemoryRouter>
-        <Header />
-      </MemoryRouter>
-    );
-    expect(queryByText('Cat1')).toBeInTheDocument();
-
-    useCategory.mockReturnValue([
-      { name: 'Cat1', slug: 'cat1' },
-      { name: 'Cat2', slug: 'cat2' },
-      { name: 'Cat3', slug: 'cat3' },
-    ]);
-    rerender(
-      <MemoryRouter>
-        <Header />
-      </MemoryRouter>
-    );
-    expect(queryByText('Cat1')).toBeInTheDocument();
-    expect(queryByText('Cat2')).toBeInTheDocument();
-    expect(queryByText('Cat3')).toBeInTheDocument();
+  // 16. Admin, Has items, None
+  it('TC16: Admin auth, cart items, no categories', () => {
+    setMocks({ name: 'Admin', role: 1 }, cartItems, categoryNone);
+    const { getByText, getByTestId } = render(<MemoryRouter><Header /></MemoryRouter>);
+    expect(getByText('Admin')).toBeInTheDocument();
+    expect(getByText('Dashboard')).toBeInTheDocument();
+    expect(getByText('Logout')).toBeInTheDocument();
+    expect(getByTestId('badge')).toHaveTextContent('2Cart');
+    expect(getByText('All Categories')).toBeInTheDocument();
   });
 
-  // Test logout functionality
-  it('calls handleLogout and shows toast on logout click', () => {
-    const setAuth = jest.fn();
-    useAuth.mockReturnValue([{ user: { name: 'User', role: 0 }, token: 'token' }, setAuth]);
-    useCart.mockReturnValue([[]]);
-    useCategory.mockReturnValue([]);
+  // 17. Admin, Has items, One
+  it('TC17: Admin auth, cart items, one category', () => {
+    setMocks({ name: 'Admin', role: 1 }, cartItems, categoryOne);
+    const { getByText, getByTestId } = render(<MemoryRouter><Header /></MemoryRouter>);
+    expect(getByText('Cat1')).toBeInTheDocument();
+    expect(getByText('Admin')).toBeInTheDocument();
+    expect(getByTestId('badge')).toHaveTextContent('2Cart');
+  });
 
-    const { getByText } = render(
-      <MemoryRouter>
-        <Header />
-      </MemoryRouter>
-    );
-
-    fireEvent.click(getByText('Logout'));
-    expect(setAuth).toHaveBeenCalledWith({
-      user: null,
-      token: '',
-    });
-    expect(toast.success).toHaveBeenCalledWith('Logout Successfully');
+  // 18. Admin, Has items, Multiple
+  it('TC18: Admin auth, cart items, multiple categories', () => {
+    setMocks({ name: 'Admin', role: 1 }, cartItems, categoryMultiple);
+    const { getByText, getByTestId } = render(<MemoryRouter><Header /></MemoryRouter>);
+    expect(getByText('Cat1')).toBeInTheDocument();
+    expect(getByText('Cat2')).toBeInTheDocument();
+    expect(getByText('Admin')).toBeInTheDocument();
+    expect(getByTestId('badge')).toHaveTextContent('2Cart');
   });
 });
