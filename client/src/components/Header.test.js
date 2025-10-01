@@ -1,5 +1,6 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
+import toast from "react-hot-toast";
 import { MemoryRouter } from 'react-router-dom';
 import Header from './Header';
 
@@ -47,6 +48,7 @@ describe('Header exhaustive test cases', () => {
 
   // 1. Null, Empty, None
   it('TC1: Null auth, empty cart, no categories', () => {
+    console.log("Header tests v10");
     setMocks(null, cartEmpty, categoryNone);
     const { getByText, getByTestId } = render(<MemoryRouter><Header /></MemoryRouter>);
     expect(getByText('Register')).toBeInTheDocument();
@@ -217,5 +219,26 @@ describe('Header exhaustive test cases', () => {
     expect(getByText('Cat2')).toBeInTheDocument();
     expect(getByText('Admin')).toBeInTheDocument();
     expect(getByTestId('badge')).toHaveTextContent('2Cart');
+  });
+
+  // 19. Test logout functionality
+  it('calls handleLogout and shows toast on logout click', () => {
+    const setAuth = jest.fn();
+    useAuth.mockReturnValue([{ user: { name: 'User', role: 0 }, token: 'token' }, setAuth]);
+    useCart.mockReturnValue([[]]);
+    useCategory.mockReturnValue([]);
+
+    const { getByText } = render(
+      <MemoryRouter>
+        <Header />
+      </MemoryRouter>
+    );
+
+    fireEvent.click(getByText('Logout'));
+    expect(setAuth).toHaveBeenCalledWith({
+      user: null,
+      token: '',
+    });
+    expect(toast.success).toHaveBeenCalledWith('Logout Successfully');
   });
 });
