@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import Footer from './Footer';
 
 describe('Footer', () => {
-    it('should render footer text', () => {
+    it('check render footer text', () => {
         const { getByText } = render(
             <MemoryRouter>
                 <Footer />
@@ -13,7 +13,7 @@ describe('Footer', () => {
         expect(getByText(/All Rights Reserved/i)).toBeInTheDocument();
     });
 
-    it('should render links: About, Contact, and Privacy Policy', () => {
+    it('check render links: About, Contact, Privacy Policy', () => {
         const { getByText } = render(
             <MemoryRouter>
                 <Footer />
