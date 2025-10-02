@@ -28,7 +28,6 @@ describe('Orders Page', () => {
   });
 
   it('should render orders and products correctly', async () => {
-    // log a random message to make sure changes are being run
     console.log('Running Orders Page tests v3');
     const mockOrders = [
       {
@@ -99,6 +98,81 @@ describe('Orders Page', () => {
 
   it('should not fetch orders if no token', async () => {
     jest.spyOn(authContext, 'useAuth').mockReturnValue([{}, setAuth]);
+    render(
+      <MemoryRouter>
+        <Orders />
+      </MemoryRouter>
+    );
+    expect(axios.get).not.toHaveBeenCalled();
+  });
+
+  it('should render multiple orders and products', async () => {
+    const mockOrders = [
+      {
+        _id: 'order1',
+        status: 'Shipped',
+        buyer: { name: 'Alice' },
+        createAt: '2024-06-02T00:00:00Z',
+        payment: { success: false },
+        products: [
+          {
+            _id: 'prod1',
+            name: 'Product A',
+            description: 'Desc A',
+            price: 50
+          },
+          {
+            _id: 'prod2',
+            name: 'Product B',
+            description: 'Desc B',
+            price: 75
+          }
+        ]
+      },
+      {
+        _id: 'order2',
+        status: 'Delivered',
+        buyer: { name: 'Bob' },
+        createAt: '2024-06-03T00:00:00Z',
+        payment: { success: true },
+        products: [
+          {
+            _id: 'prod3',
+            name: 'Product C',
+            description: 'Desc C',
+            price: 200
+          }
+        ]
+      }
+    ];
+    axios.get.mockResolvedValueOnce({ data: mockOrders });
+
+    render(
+      <MemoryRouter>
+        <Orders />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Shipped')).toBeInTheDocument();
+      expect(screen.getByText('Alice')).toBeInTheDocument();
+      expect(screen.getByText('Delivered')).toBeInTheDocument();
+      expect(screen.getByText('Bob')).toBeInTheDocument();
+      expect(screen.getByText('Product A')).toBeInTheDocument();
+      expect(screen.getByText('Desc A')).toBeInTheDocument();
+      expect(screen.getByText('Price : 50')).toBeInTheDocument();
+      expect(screen.getByText('Product B')).toBeInTheDocument();
+      expect(screen.getByText('Desc B')).toBeInTheDocument();
+      expect(screen.getByText('Price : 75')).toBeInTheDocument();
+      expect(screen.getByText('Product C')).toBeInTheDocument();
+      expect(screen.getByText('Desc C')).toBeInTheDocument();
+      expect(screen.getByText('Price : 200')).toBeInTheDocument();
+      expect(screen.getAllByText('Success').length).toBeGreaterThan(0);
+    });
+  });
+
+  it('should handle undefined auth', async () => {
+    jest.spyOn(authContext, 'useAuth').mockReturnValue([undefined, setAuth]);
     render(
       <MemoryRouter>
         <Orders />

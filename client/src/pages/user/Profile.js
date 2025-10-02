@@ -4,7 +4,7 @@ import Layout from "./../../components/Layout";
 import { useAuth } from "../../context/auth";
 import toast from "react-hot-toast";
 import axios from "axios";
-const Profile = () => {
+const Profile = ({emailDisabled = true}) => {
   //context
   const [auth, setAuth] = useAuth();
   //state
@@ -16,7 +16,7 @@ const Profile = () => {
 
   //get user data
   useEffect(() => {
-    const { email, name, phone, address } = auth?.user;
+    const { email="", name="", phone="", address="" } = auth?.user || {};
     setName(name);
     setPhone(phone);
     setEmail(email);
@@ -34,7 +34,7 @@ const Profile = () => {
         phone,
         address,
       });
-      if (data?.errro) {
+      if (data?.error) {
         toast.error(data?.error);
       } else {
         setAuth({ ...auth, user: data?.updatedUser });
@@ -78,8 +78,8 @@ const Profile = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     className="form-control"
                     id="exampleInputEmail1"
-                    placeholder="Enter Your Email "
-                    disabled
+                    placeholder="Enter Your Email"
+                    disabled = {emailDisabled}
                   />
                 </div>
                 <div className="mb-3">

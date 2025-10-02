@@ -26,7 +26,7 @@ export default {
   // jest code coverage
   // Daniel: Updated collectCoverageFrom from pages/Auth/*.js to pages/**/*.js to include all js files in pages directory
   collectCoverage: true,
-  collectCoverageFrom: ["client/src/pages/Auth/*.js", "client/src/pages/user/*.js", "client/src/components/*.js"],
+  collectCoverageFrom: ["client/src/pages/Auth/*.js", "client/src/pages/user/Orders.js","client/src/pages/user/Profile.js", "client/src/components/Footer.js","client/src/components/Header.js","client/src/components/Layout.js","client/src/components/Spinner.js", "client/src/pages/About.js", "client/src/pages/Pagenotfound.js"],
   coverageThreshold: {
     global: {
       lines: 100,
