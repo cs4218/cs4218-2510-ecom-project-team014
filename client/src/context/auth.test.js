@@ -2,13 +2,12 @@ import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { AuthProvider, useAuth } from './auth';
 import axios from 'axios';
+import { act } from '@testing-library/react';
 
-// Mock axios
 jest.mock('axios');
 
 describe('AuthContext and AuthProvider', () => {
   beforeEach(() => {
-    // Clear mocks and localStorage before each test
     jest.clearAllMocks();
     localStorage.clear();
   });
@@ -16,7 +15,6 @@ describe('AuthContext and AuthProvider', () => {
   const TestComponent = () => {
     const [auth, setAuth] = useAuth();
 
-    // Render current auth state as JSON and a button to update it
     return (
       <div>
         <pre data-testid="authState">{JSON.stringify(auth)}</pre>
@@ -50,7 +48,6 @@ describe('AuthContext and AuthProvider', () => {
       </AuthProvider>
     );
 
-    // Wait for useEffect to update state
     await waitFor(() => {
       expect(getByTestId('authState').textContent).toBe(JSON.stringify(storedData));
     });
@@ -65,14 +62,15 @@ describe('AuthContext and AuthProvider', () => {
 
     expect(getByTestId('authState').textContent).toBe(JSON.stringify({ user: null, token: '' }));
 
-    getByText('Update Auth').click();
+    act(() => {
+      getByText('Update Auth').click();
+    });
 
     expect(getByTestId('authState').textContent).toBe(JSON.stringify({ user: { name: 'Test User' }, token: 'token123' }));
   });
 
   it('should set axios default Authorization header', () => {
-    // Initially axios.defaults.headers.common['Authorization'] should be ''
-    expect(axios.defaults.headers.common['Authorization']).toBeUndefined();
+    axios.defaults.headers.common['Authorization'] = '';
 
     const TestComponentSetToken = () => {
       const [auth, setAuth] = useAuth();
@@ -90,8 +88,8 @@ describe('AuthContext and AuthProvider', () => {
       </AuthProvider>
     );
 
-    // Note: Because axios.defaults are set synchronously in AuthProvider render,
-    // this test verifies that after rendering, axios.defaults have the token
     expect(axios.defaults.headers.common['Authorization']).toBe('mytoken');
   });
 });
+
+// Above tests are generated with the help of AI

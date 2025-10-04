@@ -212,3 +212,5 @@ describe('Login Component', () => {
       expect(mockedUsedNavigate).toHaveBeenCalledWith('/forgot-password');
     });
 });
+
+// Above tests are generated with the help of AI

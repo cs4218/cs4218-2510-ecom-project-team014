@@ -192,3 +192,5 @@ describe('Register Component', () => {
     expect(getByPlaceholderText('What is Your Favorite sports').value).toBe('Football');
   });
 });
+
+// Above tests are generated with the help of AI
