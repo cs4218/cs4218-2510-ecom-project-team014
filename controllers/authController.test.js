@@ -54,7 +54,7 @@ describe('registerController Unit Tests', () => {
   });
 
   it('should return error if email is missing', async () => {
-    req.body.email = ""; // Clear email to test missing field.
+    req.body.email = ""; 
 
     await registerController(req, res);
 
@@ -115,5 +115,59 @@ describe('registerController Unit Tests', () => {
       success: false,
       message: 'Error in Registeration',
     }));
+  });
+
+  it('should return error if name is longer than 100 characters', async () => {
+    req.body.name = 'n'.repeat(101);
+
+    await registerController(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.send).toHaveBeenCalledWith({ error: 'Name must be less than 101 characters' });
+  });
+
+  it('should return error if email format is invalid', async () => {
+    req.body.email = "invalidemail.com";
+
+    await registerController(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.send).toHaveBeenCalledWith({ error: 'Email format is invalid' });
+  });
+
+  it('should return error if password is too short', async () => {
+    req.body.password = "12345";
+
+    await registerController(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.send).toHaveBeenCalledWith({ error: 'Password must be at least 6 characters' });
+  });
+
+  it('should return error if phone number is too long', async () => {
+    req.body.phone = '1'.repeat(21);
+
+    await registerController(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.send).toHaveBeenCalledWith({ error: 'Phone number must not exceed 20 characters' });
+  });
+
+  it('should return error if address is too long', async () => {
+    req.body.address = 'a'.repeat(151);
+
+    await registerController(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.send).toHaveBeenCalledWith({ error: 'Address must be less than 151 characters' });
+  });
+
+  it('should return error if answer is too long', async () => {
+    req.body.answer = 'a'.repeat(51);
+
+    await registerController(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.send).toHaveBeenCalledWith({ error: 'Answer must be less than 51 characters' });
   });
 });
