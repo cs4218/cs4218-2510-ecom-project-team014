@@ -4,6 +4,8 @@ import toast from "react-hot-toast";
 import { MemoryRouter } from 'react-router-dom';
 import Header from './Header';
 
+// AI Disclaimer: The following test code was generated with the assistance of AI.
+
 // Mocks
 jest.mock('../context/auth', () => ({
   useAuth: jest.fn(),

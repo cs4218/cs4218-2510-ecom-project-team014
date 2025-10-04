@@ -9,7 +9,7 @@ jest.mock('./../components/Layout', () => ({ children, title }) => (
 ));
 
 describe('Pagenotfound', () => {
-  it('renders 404 page with correct title and content', () => {
+  it('renders 404 page with correct title, content, and links', () => {
     const { getByTestId, getByText } = render(
       <MemoryRouter>
         <Pagenotfound />
