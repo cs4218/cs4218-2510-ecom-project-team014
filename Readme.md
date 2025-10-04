@@ -148,3 +148,11 @@ To begin unit testing with Jest in your project, follow these steps:
 **CI runlink**
 
 https://github.com/cs4218/cs4218-2510-ecom-project-team014/actions/runs/17570205515/job/49904647637#step:6:89
+
+
+**Project Workload for Milestone 1**
+**WONG XU CHENG**
+   - Write unit tests for Protected Routes feature 
+   - Write unit tests for Registrtion feature 
+   - Write unit tests for Login feature
+   - Write unit tests for Admin Dashboard feature 
