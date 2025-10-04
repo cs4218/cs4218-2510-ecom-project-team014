@@ -75,8 +75,8 @@ describe('Register Component', () => {
 
 
   // Test when unknown error occurs and it goes to the catch error branch
-  it('should display error message on failed registration due to unknown error', async () => {
-    axios.post.mockRejectedValueOnce({ message: 'Something went wrong' });
+  it('should display error message on failed registration due to unexpected error', async () => {
+    axios.post.mockRejectedValueOnce({ message: 'Error in registration' });
 
     const { getByText, getByPlaceholderText } = render(
         <MemoryRouter initialEntries={['/register']}>
@@ -101,7 +101,7 @@ describe('Register Component', () => {
   });
 
   // Test if the page renders all input fields and button correctly
-  it('renders all input fields and button correctly', () => {
+  it('renders all input fields and button correctly', async () => {
     const { getByPlaceholderText, getByText } = render(
       <MemoryRouter initialEntries={['/register']}>
         <Routes>
@@ -144,5 +144,51 @@ describe('Register Component', () => {
 
     await waitFor(() => expect(axios.post).toHaveBeenCalled());
     expect(toast.error).toHaveBeenCalledWith('Already Register please login');
+  });
+
+  it('inputs should be initially empty', () => {
+    const { getByText, getByPlaceholderText } = render(
+      <MemoryRouter initialEntries={['/register']}>
+        <Routes>
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </MemoryRouter>
+    );
+    
+    expect(getByPlaceholderText('Enter Your Name').value).toBe('');
+    expect(getByPlaceholderText('Enter Your Email').value).toBe('');
+    expect(getByPlaceholderText('Enter Your Password').value).toBe('');
+    expect(getByPlaceholderText('Enter Your Phone').value).toBe('');
+    expect(getByPlaceholderText('Enter Your Address').value).toBe('');
+    expect(getByPlaceholderText('Enter Your DOB').value).toBe('');
+    expect(getByPlaceholderText('What is Your Favorite sports').value).toBe('');
+  });
+
+  it('allow typing inputs into each field on the form', async () => {
+    axios.post.mockResolvedValueOnce({ data: { success: true } });
+
+    const { getByText, getByPlaceholderText } = render(
+        <MemoryRouter initialEntries={['/register']}>
+          <Routes>
+            <Route path="/register" element={<Register />} />
+          </Routes>
+        </MemoryRouter>
+      );
+
+    fireEvent.change(getByPlaceholderText('Enter Your Name'), { target: { value: 'John Doe' } });
+    fireEvent.change(getByPlaceholderText('Enter Your Email'), { target: { value: 'test@example.com' } });
+    fireEvent.change(getByPlaceholderText('Enter Your Password'), { target: { value: 'password123' } });
+    fireEvent.change(getByPlaceholderText('Enter Your Phone'), { target: { value: '1234567890' } });
+    fireEvent.change(getByPlaceholderText('Enter Your Address'), { target: { value: '123 Street' } });
+    fireEvent.change(getByPlaceholderText('Enter Your DOB'), { target: { value: '2000-01-01' } });
+    fireEvent.change(getByPlaceholderText('What is Your Favorite sports'), { target: { value: 'Football' } });
+
+    expect(getByPlaceholderText('Enter Your Name').value).toBe('John Doe');
+    expect(getByPlaceholderText('Enter Your Email').value).toBe('test@example.com');
+    expect(getByPlaceholderText('Enter Your Password').value).toBe('password123');
+    expect(getByPlaceholderText('Enter Your Phone').value).toBe('1234567890');
+    expect(getByPlaceholderText('Enter Your Address').value).toBe('123 Street');
+    expect(getByPlaceholderText('Enter Your DOB').value).toBe('2000-01-01');
+    expect(getByPlaceholderText('What is Your Favorite sports').value).toBe('Football');
   });
 });
