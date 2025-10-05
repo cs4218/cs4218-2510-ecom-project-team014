@@ -27,8 +27,8 @@ export default {
   collectCoverageFrom: ["client/src/pages/Auth/**"],
   coverageThreshold: {
     global: {
-      lines: 80,
-      functions: 80,
+      lines: 100,
+      functions: 100,
     },
   },
   setupFilesAfterEnv: ["<rootDir>/client/src/setupTests.js"],

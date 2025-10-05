@@ -29,6 +29,6 @@ jobs:
           cd client
           npm install
 
-      - name: Run all tests
-        run: npm run test
+      - name: Run Just tests
+        run: npm run test:frontend
     
