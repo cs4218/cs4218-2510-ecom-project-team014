@@ -111,9 +111,9 @@ const CreateCategory = () => {
                 </thead>
                 <tbody>
                   {categories?.map((c) => (
-                    <>
-                      <tr>
-                        <td key={c._id}>{c.name}</td>
+                    //<>
+                      <tr key={c._id}>
+                        <td>{c.name}</td>
                         <td>
                           <button
                             className="btn btn-primary ms-2"
@@ -135,7 +135,7 @@ const CreateCategory = () => {
                           </button>
                         </td>
                       </tr>
-                    </>
+                    //</>
                   ))}
                 </tbody>
               </table>

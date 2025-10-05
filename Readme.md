@@ -148,3 +148,35 @@ To begin unit testing with Jest in your project, follow these steps:
 **CI runlink**
 
 https://github.com/cs4218/cs4218-2510-ecom-project-team014/actions/runs/17570205515/job/49904647637#step:6:89
+
+## Yu Miao
+## Test cases are generated with the help from AI
+1. Admin Actions
+   - pages/admin/CreateCategory.js
+   - pages/admin/CreateProduct.js
+   - pages/admin/UpdateProduct.js
+   - controllers/categoryController.js
+      - createCategoryController
+      - updateCategoryController
+      - deleteCategoryController
+2. Admin View Orders
+   - pages/admin/AdminOrders.js
+3. Admin View Products
+   - pages/admin/Products.js
+   - controllers/productController.js
+   - createProductController
+      - deleteProductController
+      - updateProductController
+4. General
+   - components/Routes/Private.js
+   - components/UserMenu.js
+   - pages/user/Dashboard.js
+   - models/userModel.js
+
+
+**Project Workload for Milestone 1**
+**WONG XU CHENG**
+   - Write unit tests for Protected Routes feature 
+   - Write unit tests for Registrtion feature 
+   - Write unit tests for Login feature
+   - Write unit tests for Admin Dashboard feature 

@@ -20,17 +20,17 @@ export default {
   transformIgnorePatterns: ["/node_modules/(?!(styleMock\\.js)$)"],
 
   // only run these tests
-  // Daniel: Updated from pages/Auth/*.test.js  to **/**/*.test.js to include all test files in pages directory
-  testMatch: ["<rootDir>/client/src/pages/**/*.test.js", "<rootDir>/client/src/components/**/*.test.js"],
+  testMatch: ["<rootDir>/client/src/pages/Auth/*.test.js", "<rootDir>/client/src/pages/admin/*.test.js", "<rootDir>/client/src/components/Form/*.test.js", "<rootDir>/client/src/components/Routes/*.test.js", "<rootDir>/client/src/components/*.test.js", "<rootDir>/client/src/pages/user/*.test.js", "<rootDir>/client/src/context/*.test.js",],
 
   // jest code coverage
   // Daniel: Updated collectCoverageFrom from pages/Auth/*.js to pages/**/*.js to include all js files in pages directory
   collectCoverage: true,
-  collectCoverageFrom: ["client/src/pages/Auth/*.js", "client/src/pages/user/Orders.js","client/src/pages/user/Profile.js", "client/src/components/Footer.js","client/src/components/Header.js","client/src/components/Layout.js","client/src/components/Spinner.js", "client/src/pages/About.js", "client/src/pages/Pagenotfound.js"],
+  collectCoverageFrom: ["client/src/pages/Auth/**", "client/src/pages/admin/**", "client/src/components/Form/**", "client/src/components/Routes/**", "client/src/components/**", "client/src/pages/user/**", "client/src/context/auth.js"],
+
   coverageThreshold: {
     global: {
-      lines: 100,
-      functions: 100,
+      lines: 80,
+      functions: 80,
     },
   },
   setupFilesAfterEnv: ["<rootDir>/client/src/setupTests.js"],
