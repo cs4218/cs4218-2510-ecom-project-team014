@@ -350,10 +350,53 @@ export const braintreeTokenController = async (req, res) => {
 export const brainTreePaymentController = async (req, res) => {
   try {
     const { nonce, cart } = req.body;
+    if (!cart || cart.length === 0) {
+      return res.status(500).send({ok: false, message: "No items in cart."})
+    }
+
+    // Validate prices values first
+    for (const item of cart) {
+      if (item.price < 0 || Number.isNaN(Number(item.price))) {
+        return res.status(400).send({ok: false, message: "Invalid price for item"})
+      }
+    }
+
+    // Batch query to fetch all products from DB at once
+    const productIds = cart.map(item => item._id);
+    const products = await productModel.find({ _id: { $in: productIds } });
+    // Create a map for quick lookups
+    const productMap = new Map();
+    products.forEach(product => {
+      productMap.set(product._id.toString(), product);
+    });
+    // Validate all items against the fetched products
+    for (const item of cart) {
+      const product = productMap.get(item._id.toString());
+
+      if (!product) {
+        return res.status(404).send({
+          ok: false,
+          message: `Product with ID ${item._id} not found`
+        })
+      }
+      // Check if requested quantity is available
+      const requestedQuantity = item.quantity || 1;
+      if (!product.quantity || (product.quantity < requestedQuantity)) {
+        return res.status(400).send({
+          ok: false,
+          message: `Insufficient stock for ${product.name}. Available: ${product.quantity}, Requested: ${requestedQuantity}`
+        })
+      }
+    }
+
     let total = 0;
     cart.map((i) => {
       total += i.price;
     });
+    // We assume that $0 transactions (e.g. discounts, free items etc.) are not allowed at the moment
+    if (total === 0) {
+      return res.status(500).json({ok: false, message: "Total transaction amount cannot be $0."})
+    }
     let newTransaction = gateway.transaction.sale(
       {
         amount: total,
