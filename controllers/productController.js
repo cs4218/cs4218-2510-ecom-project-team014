@@ -261,6 +261,9 @@ export const productListController = async (req, res) => {
 export const searchProductController = async (req, res) => {
   try {
     const { keyword } = req.params;
+    if (!keyword.trim()) {
+      return res.json([])
+    }
     const resutls = await productModel
       .find({
         $or: [
