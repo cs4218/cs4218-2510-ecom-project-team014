@@ -20,11 +20,12 @@ export default {
   transformIgnorePatterns: ["/node_modules/(?!(styleMock\\.js)$)"],
 
   // only run these tests
-  testMatch: ["<rootDir>/client/src/pages/Auth/*.test.js", "<rootDir>/client/src/pages/admin/*.test.js", "<rootDir>/client/src/components/Form/*.test.js", "<rootDir>/client/src/components/Routes/*.test.js", "<rootDir>/client/src/components/*.test.js", "<rootDir>/client/src/pages/user/*.test.js"],
+  testMatch: ["<rootDir>/client/src/pages/Auth/*.test.js", "<rootDir>/client/src/pages/admin/*.test.js", "<rootDir>/client/src/components/Form/*.test.js", "<rootDir>/client/src/components/Routes/*.test.js", "<rootDir>/client/src/components/*.test.js", "<rootDir>/client/src/pages/user/*.test.js", "<rootDir>/client/src/context/*.test.js",],
 
   // jest code coverage
   collectCoverage: true,
-  collectCoverageFrom: ["client/src/pages/Auth/**", "client/src/pages/admin/**", "client/src/components/Form/**", "client/src/components/Routes/**", "client/src/components/**", "client/src/pages/user/**"],
+  collectCoverageFrom: ["client/src/pages/Auth/**", "client/src/pages/admin/**", "client/src/components/Form/**", "client/src/components/Routes/**", "client/src/components/**", "client/src/pages/user/**", "client/src/context/auth.js"],
+
   coverageThreshold: {
     global: {
       lines: 100,

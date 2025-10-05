@@ -173,3 +173,10 @@ https://github.com/cs4218/cs4218-2510-ecom-project-team014/actions/runs/17570205
    - pages/user/Dashboard.js
    - models/userModel.js
 
+
+**Project Workload for Milestone 1**
+**WONG XU CHENG**
+   - Write unit tests for Protected Routes feature 
+   - Write unit tests for Registrtion feature 
+   - Write unit tests for Login feature
+   - Write unit tests for Admin Dashboard feature 
