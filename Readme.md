@@ -150,6 +150,7 @@ To begin unit testing with Jest in your project, follow these steps:
 https://github.com/cs4218/cs4218-2510-ecom-project-team014/actions/runs/17570205515/job/49904647637#step:6:89
 
 ## Yu Miao
+## Test cases are generated with the help from AI
 1. Admin Actions
    - pages/admin/CreateCategory.js
    - pages/admin/CreateProduct.js
