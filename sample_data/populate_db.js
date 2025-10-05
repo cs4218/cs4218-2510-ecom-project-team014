@@ -8,6 +8,7 @@ import categoryModel from "../models/categoryModel.js";
 import userModel from "../models/userModel.js";
 import orderModel from "../models/orderModel.js";
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 configDotenv();
 
@@ -19,6 +20,17 @@ const loadJSONFile = (filename) => {
   const filePath = path.join(__dirname, filename);
   const data = fs.readFileSync(filePath, 'utf-8');
   return JSON.parse(data);
+};
+
+const hashPassword = async (password) => {
+  try {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    return hashedPassword;
+  } catch (error) {
+    console.log("Error hashing password:", error);
+    throw error;
+  }
 };
 
 // Function to convert MongoDB extended JSON format
@@ -43,6 +55,11 @@ const processDocument = (doc) => {
       processed[key] = convertMongoId(value);
     } else if (key === 'products' && Array.isArray(value)) {
       processed[key] = value.map(p => convertMongoId(p));
+    } else if (key === 'photo' && value && value.data && value.data.$binary) {
+      processed[key] = {
+        data: Buffer.from(value.data.$binary.base64, 'base64'),
+        contentType: value.contentType || 'image/jpeg'
+      };
     } else {
       processed[key] = value;
     }
@@ -73,16 +90,46 @@ const populateData = async () => {
     // Load and insert users
     console.log("\n2. Loading users...");
     const users = loadJSONFile('test.users.json');
-    const processedUsers = users.map(processDocument);
+    const hashedPassword = await hashPassword("password");
+    console.log("  - Generated bcrypt hash for password: 'password'");
+
+    // Process users and replace their passwords with the new hash
+    const processedUsers = await Promise.all(users.map(async (user) => {
+      const processed = processDocument(user);
+      // Replace the password with our hashed version
+      processed.password = hashedPassword;
+      return processed;
+    }));
+
     const insertedUsers = await userModel.insertMany(processedUsers, { ordered: false, rawResult: false });
-    console.log(`✓ Inserted ${insertedUsers.length} users`);
+    console.log(`✓ Inserted ${insertedUsers.length} users with password: 'password'`);
 
     // Load and insert products
     console.log("\n3. Loading products...");
     const products = loadJSONFile('test.products.json');
     const processedProducts = products.map(processDocument);
-    const insertedProducts = await productModel.insertMany(processedProducts, { ordered: false, rawResult: false });
-    console.log(`✓ Inserted ${insertedProducts.length} products`);
+
+    let insertedProducts = [];
+    try {
+      insertedProducts = await productModel.insertMany(processedProducts, { ordered: false });
+      console.log(`✓ Inserted ${insertedProducts.length} products`);
+    } catch (error) {
+      console.log("Error inserting products:", error.message);
+      // Try to insert one by one to identify problematic documents
+      if (error.writeErrors) {
+        console.log(`Failed to insert ${error.writeErrors.length} products`);
+        error.writeErrors.forEach((err, idx) => {
+          if (idx < 3) { // Show first 3 errors only
+            console.log(`  - Error at index ${err.index}: ${err.errmsg}`);
+          }
+        });
+      }
+      // Count successful inserts
+      if (error.insertedDocs) {
+        insertedProducts = error.insertedDocs;
+        console.log(`✓ Successfully inserted ${insertedProducts.length} products despite errors`);
+      }
+    }
 
     // Load and insert orders
     console.log("\n4. Loading orders...");
