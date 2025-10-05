@@ -6,7 +6,6 @@ const mockOrderSave = jest.fn();
 const mockProductFind = jest.fn();
 const mockProductBulkWrite = jest.fn();
 
-// Mock the braintree module
 jest.unstable_mockModule('braintree', () => ({
   default: {
     BraintreeGateway: jest.fn().mockImplementation(() => ({
@@ -23,7 +22,6 @@ jest.unstable_mockModule('braintree', () => ({
   }
 }));
 
-// Mock dotenv
 jest.unstable_mockModule('dotenv', () => ({
   default: {
     config: jest.fn()
@@ -37,7 +35,6 @@ jest.unstable_mockModule('../models/orderModel.js', () => ({
   }))
 }));
 
-// Mock productModel
 jest.unstable_mockModule('../models/productModel.js', () => ({
   default: {
     find: mockProductFind,
@@ -57,7 +54,6 @@ describe('braintreeTokenController', () => {
       status: jest.fn().mockReturnThis()
     };
 
-    // Reset mocks
     mockGenerate.mockReset();
   });
 
@@ -135,13 +131,11 @@ describe('brainTreePaymentController', () => {
       send: jest.fn()
     };
 
-    // Reset mocks
     mockTransactionSale.mockReset();
     mockOrderSave.mockReset();
     mockProductFind.mockReset();
     mockProductBulkWrite.mockReset();
 
-    // Default mock products with sufficient quantity
     mockProductFind.mockResolvedValue([
       { _id: { toString: () => 'prod1' }, name: 'Product 1', quantity: 10 },
       { _id: { toString: () => 'prod2' }, name: 'Product 2', quantity: 5 }
@@ -245,7 +239,7 @@ describe('brainTreePaymentController', () => {
 
     expect(mockTransactionSale).not.toHaveBeenCalled();
     expect(mockOrderSave).not.toHaveBeenCalled();
-    expect(mockProductFind).not.toHaveBeenCalled(); // Doesn't even get to product validation
+    expect(mockProductFind).not.toHaveBeenCalled(); // doesn't even get to product validation
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.send).toHaveBeenCalledWith({ok: false, message: "Invalid price for item"});
   });

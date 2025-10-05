@@ -24,7 +24,6 @@ describe('searchProductController', () => {
       send: jest.fn()
     };
 
-    // Reset the mock chains
     mockFind.mockReset();
     mockSelect.mockReset();
     mockFind.mockReturnValue({ select: mockSelect });
@@ -86,7 +85,6 @@ describe('searchProductController', () => {
 
     await searchProductController(req, res);
 
-    // Should search for 'shoe', not '  shoe  '
     expect(mockFind).toHaveBeenCalledWith({
       $or: [
         { name: { $regex: 'shoe', $options: 'i' } },
