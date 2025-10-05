@@ -261,11 +261,15 @@ export const productListController = async (req, res) => {
 export const searchProductController = async (req, res) => {
   try {
     const { keyword } = req.params;
+    if (!keyword || !keyword.trim()) {
+      return res.json([])
+    }
+    const trimmedKeyword = keyword.trim();
     const resutls = await productModel
       .find({
         $or: [
-          { name: { $regex: keyword, $options: "i" } },
-          { description: { $regex: keyword, $options: "i" } },
+          { name: { $regex: trimmedKeyword, $options: "i" } },
+          { description: { $regex: trimmedKeyword, $options: "i" } },
         ],
       })
       .select("-photo");
