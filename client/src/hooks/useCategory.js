@@ -8,7 +8,8 @@ export default function useCategory() {
   const getCategories = async () => {
     try {
       const { data } = await axios.get("/api/v1/category/get-category");
-      setCategories(data?.category);
+      const categoryData = Array.isArray(data?.category) ? data.category : [];
+      setCategories(categoryData);
     } catch (error) {
       console.log(error);
     }
