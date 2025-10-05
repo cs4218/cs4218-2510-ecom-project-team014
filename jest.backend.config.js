@@ -8,6 +8,8 @@ export default {
   // which test to run
   testMatch: [
     "<rootDir>/controllers/authController.test.js",
+    "<rootDir>/controllers/brainTreePayment.test.js",
+    "<rootDir>/controllers/productSearch.test.js",
     "<rootDir>/helpers/*.test.js",
     "<rootDir>/middlewares/*.test.js"
   ],
@@ -16,6 +18,7 @@ export default {
   collectCoverage: true,
   collectCoverageFrom: [
     "controllers/authController.js",
+    "controllers/productController.js",
     "helpers/**",
     "middlewares/**",
   ],
