@@ -23,6 +23,8 @@ jest.mock('../../context/search', () => ({
     useSearch: jest.fn(() => [{ keyword: '' }, jest.fn()])
   }));  
 
+jest.mock("../../hooks/useCategory", ()=> jest.fn(()=>[]));
+
   Object.defineProperty(window, 'localStorage', {
     value: {
       setItem: jest.fn(),

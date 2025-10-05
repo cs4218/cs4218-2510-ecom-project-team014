@@ -6,22 +6,16 @@ export default {
   testEnvironment: "node",
 
   // which test to run
-  testMatch: [
-    "<rootDir>/controllers/authController.test.js",
-    "<rootDir>/controllers/brainTreePayment.test.js",
-    "<rootDir>/controllers/productSearch.test.js",
+  testMatch: ["<rootDir>/controllers/*.test.js", "<rootDir>/models/*.test.js",
     "<rootDir>/helpers/*.test.js",
-    "<rootDir>/middlewares/*.test.js"
-  ],
+    "<rootDir>/middlewares/*.test.js"],
 
   // jest code coverage
   collectCoverage: true,
-  collectCoverageFrom: [
-    "controllers/authController.js",
-    "controllers/productController.js",
+  collectCoverageFrom: ["controllers/**", "models/**",
     "helpers/**",
-    "middlewares/**",
-  ],
+    "middlewares/**"],
+
   coverageThreshold: {
     global: {
       lines: 80,

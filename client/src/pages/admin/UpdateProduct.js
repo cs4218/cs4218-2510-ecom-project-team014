@@ -30,12 +30,13 @@ const UpdateProduct = () => {
       setId(data.product._id);
       setDescription(data.product.description);
       setPrice(data.product.price);
-      setPrice(data.product.price);
+      //setPrice(data.product.price);
       setQuantity(data.product.quantity);
       setShipping(data.product.shipping);
       setCategory(data.product.category._id);
     } catch (error) {
       console.log(error);
+      toast.error("Failed to load product");
     }
   };
   useEffect(() => {
@@ -51,7 +52,7 @@ const UpdateProduct = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error("Something wwent wrong in getting catgeory");
+      toast.error("Something went wrong in getting catgeory");
     }
   };
 
@@ -70,15 +71,21 @@ const UpdateProduct = () => {
       productData.append("quantity", quantity);
       photo && productData.append("photo", photo);
       productData.append("category", category);
-      const { data } = axios.put(
+      const { data } = await axios.put(
         `/api/v1/product/update-product/${id}`,
         productData
       );
+      // if (data?.success) {
+      //   toast.error(data?.message);
+      // } else {
+      //   toast.success("Product Updated Successfully");
+      //   navigate("/dashboard/admin/products");
+      // }
       if (data?.success) {
-        toast.error(data?.message);
-      } else {
         toast.success("Product Updated Successfully");
         navigate("/dashboard/admin/products");
+      } else {
+        toast.error(data?.message || "Failed to update product");
       }
     } catch (error) {
       console.log(error);
@@ -90,11 +97,12 @@ const UpdateProduct = () => {
   const handleDelete = async () => {
     try {
       let answer = window.prompt("Are You Sure want to delete this product ? ");
-      if (!answer) return;
+      //if (!answer) return;
+      if (!answer || answer.toLowerCase() !== 'yes') return;
       const { data } = await axios.delete(
         `/api/v1/product/delete-product/${id}`
       );
-      toast.success("Product DEleted Succfully");
+      toast.success("Product Deleted Succfully");
       navigate("/dashboard/admin/products");
     } catch (error) {
       console.log(error);
@@ -112,7 +120,9 @@ const UpdateProduct = () => {
             <h1>Update Product</h1>
             <div className="m-1 w-75">
               <Select
-                bordered={false}
+                //bordered={false}
+                data-testid="category-select"
+                variant="borderless"
                 placeholder="Select a category"
                 size="large"
                 showSearch
@@ -200,7 +210,9 @@ const UpdateProduct = () => {
               </div>
               <div className="mb-3">
                 <Select
-                  bordered={false}
+                  //bordered={false}
+                  data-testid="shipping-select"
+                  variant="borderless"
                   placeholder="Select Shipping "
                   size="large"
                   showSearch
@@ -208,7 +220,7 @@ const UpdateProduct = () => {
                   onChange={(value) => {
                     setShipping(value);
                   }}
-                  value={shipping ? "yes" : "No"}
+                  value={shipping}
                 >
                   <Option value="0">No</Option>
                   <Option value="1">Yes</Option>

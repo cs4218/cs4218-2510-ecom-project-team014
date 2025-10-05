@@ -143,7 +143,7 @@ export const deleteProductController = async (req, res) => {
   }
 };
 
-//upate producta
+//upate product
 export const updateProductController = async (req, res) => {
   try {
     const { name, description, price, category, quantity, shipping } =
@@ -187,7 +187,7 @@ export const updateProductController = async (req, res) => {
     res.status(500).send({
       success: false,
       error,
-      message: "Error in Updte product",
+      message: "Error in Update product",
     });
   }
 };
