@@ -405,13 +405,22 @@ export const brainTreePaymentController = async (req, res) => {
           submitForSettlement: true,
         },
       },
-      function (error, result) {
+      async function (error, result) {
         if (result) {
           const order = new orderModel({
             products: cart,
             payment: result,
             buyer: req.user._id,
           }).save();
+          const bulkOps = cart.map(item => ({
+            updateOne: {
+              filter: { _id: item._id },
+              update: { $inc: { quantity: -(item.quantity || 1) } }
+            }
+          }));
+
+          await productModel.bulkWrite(bulkOps);
+
           res.json({ ok: true });
         } else {
           res.status(500).send(error);
