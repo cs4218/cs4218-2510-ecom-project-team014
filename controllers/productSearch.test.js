@@ -107,3 +107,5 @@ describe('searchProductController', () => {
     }));
   });
 });
+
+// LLMs were used to proofread, debug and fix test cases.  
