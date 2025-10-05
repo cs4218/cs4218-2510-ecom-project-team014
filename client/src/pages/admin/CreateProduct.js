@@ -27,9 +27,16 @@ const CreateProduct = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error("Something wwent wrong in getting catgeory");
+      toast.error("Something went wrong in getting catgeory");
     }
   };
+  const handleShippingChange = (value) => {
+  setShipping(value); 
+};
+
+const handleCategoryChange = (value) => {
+  setCategory(value); 
+};
 
   useEffect(() => {
     getAllCategory();
@@ -46,15 +53,22 @@ const CreateProduct = () => {
       productData.append("quantity", quantity);
       productData.append("photo", photo);
       productData.append("category", category);
-      const { data } = axios.post(
+      productData.append("shipping", shipping);
+      const { data } = await axios.post(
         "/api/v1/product/create-product",
         productData
       );
+      // if (data?.success) {
+      //   toast.error(data?.message);
+      // } else {
+      //   toast.success("Product Created Successfully");
+      //   navigate("/dashboard/admin/products");
+      // }
       if (data?.success) {
-        toast.error(data?.message);
-      } else {
         toast.success("Product Created Successfully");
         navigate("/dashboard/admin/products");
+      } else {
+        toast.error(data?.message || "Failed to create product");
       }
     } catch (error) {
       console.log(error);
@@ -73,14 +87,18 @@ const CreateProduct = () => {
             <h1>Create Product</h1>
             <div className="m-1 w-75">
               <Select
-                bordered={false}
+                //bordered={false}
+                data-testid="antd-select"
+                //data-testid="category-select"
+                variant="borderless"
                 placeholder="Select a category"
                 size="large"
                 showSearch
                 className="form-select mb-3"
-                onChange={(value) => {
-                  setCategory(value);
-                }}
+                // onChange={(value) => {
+                //   setCategory(value);
+                // }}
+                onChange={handleCategoryChange}
               >
                 {categories?.map((c) => (
                   <Option key={c._id} value={c._id}>
@@ -151,14 +169,17 @@ const CreateProduct = () => {
               </div>
               <div className="mb-3">
                 <Select
-                  bordered={false}
+                  //bordered={false}
+                  data-testid="shipping-select"
+                  variant="borderless"
                   placeholder="Select Shipping "
                   size="large"
                   showSearch
                   className="form-select mb-3"
-                  onChange={(value) => {
-                    setShipping(value);
-                  }}
+                    // onChange={(value) => {
+                    //   setShipping(value);
+                    // }}
+                    onChange={handleShippingChange} 
                 >
                   <Option value="0">No</Option>
                   <Option value="1">Yes</Option>
