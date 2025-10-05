@@ -391,7 +391,7 @@ export const brainTreePaymentController = async (req, res) => {
 
     let total = 0;
     cart.map((i) => {
-      total += i.price;
+      total += i.price * i.quantity;
     });
     // We assume that $0 transactions (e.g. discounts, free items etc.) are not allowed at the moment
     if (total === 0) {
