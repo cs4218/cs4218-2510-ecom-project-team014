@@ -9,7 +9,7 @@ describe("useCategory", () => {
     jest.clearAllMocks();
   });
 
-  test("successful data fetch when mount", async () => {
+  it("successful data fetch when mount", async () => {
     const payload = [{ _id: "1", name: "Shoes", slug: "shoes" }];
     axios.get.mockResolvedValue({ data: { category: payload } });
 
@@ -28,7 +28,7 @@ describe("useCategory", () => {
     expect(axios.get).toHaveBeenCalledWith("/api/v1/category/get-category");
   });
 
-  test("log and state stays at [] when error - e.g. API fails", async () => {
+  it("log and state stays at [] when error - e.g. API fails", async () => {
     const logSpy = jest.spyOn(console, "log").mockImplementation(() => {});
     axios.get.mockRejectedValue(new Error("network down"));
 
@@ -43,7 +43,7 @@ describe("useCategory", () => {
     logSpy.mockRestore();
   });
 
-  test("guards against missing data.category (prevents undefined)", async () => {
+  it("guards against missing data.category (prevents undefined)", async () => {
     // Simulate backend returning undefined
     axios.get.mockResolvedValue({ data: {} });
 
