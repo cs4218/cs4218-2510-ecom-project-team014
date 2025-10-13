@@ -17,7 +17,7 @@ const CategoryProduct = () => {
       const { data } = await axios.get(
         `/api/v1/product/product-category/${params.slug}`
       );
-      setProducts(data?.products);
+      setProducts(Array.isArray(data?.products) ? data.products : []);
       setCategory(data?.category);
     } catch (error) {
       console.log(error);
@@ -55,7 +55,9 @@ const CategoryProduct = () => {
                     <div className="card-name-price">
                       <button
                         className="btn btn-info ms-1"
-                        onClick={() => navigate(`/product/${p.slug}`)}
+                        onClick={() =>
+                          p?.slug && navigate(`/product/${p.slug}`)
+                        }
                       >
                         More Details
                       </button>
