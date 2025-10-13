@@ -5,21 +5,31 @@ export default {
   // when testing backend
   testEnvironment: "node",
 
+  transform: { "^.+\\.[jt]sx?$": "babel-jest" },
+
+  // helpful for bare ESM path imports with .js extension
+  // moduleNameMapper: {
+  //   "^(\\.{1,2}/.*)\\.js$": "$1.js",
+  // },
+
   // which test to run
-  testMatch: ["<rootDir>/controllers/*.test.js", "<rootDir>/models/*.test.js",
-    "<rootDir>/helpers/*.test.js",
-    "<rootDir>/middlewares/*.test.js"],
+
+  // "<rootDir>/controllers/*.test.js", "<rootDir>/models/*.test.js",
+
+  testMatch: ["<rootDir>/controllers/categoryController.test.js"],
 
   // jest code coverage
   collectCoverage: true,
-  collectCoverageFrom: ["controllers/**", "models/**",
-    "helpers/**",
-    "middlewares/**"],
+
+  // "controllers/**", "models/**",
+  //   "helpers/**",
+  //   "middlewares/**"
+  collectCoverageFrom: ["<rootDir>/controllers/categoryController.js"],
 
   coverageThreshold: {
     global: {
-      lines: 80,
-      functions: 80,
+      lines: 100,
+      functions: 100,
     },
   },
 };

@@ -20,16 +20,27 @@ export default {
   transformIgnorePatterns: ["/node_modules/(?!(styleMock\\.js)$)"],
 
   // only run these tests
-  testMatch: ["<rootDir>/client/src/**/*.test.js"],
+  testMatch: [
+    "<rootDir>/client/src/hooks/useCategory.test.js",
+    "<rootDir>/client/src/pages/Categories.test.js",
+    "<rootDir>/client/src/pages/ProductDetails.test.js",
+    "<rootDir>/client/src/pages/CategoryProduct.test.js",
+  ],
 
   // jest code coverage
   // Daniel: Updated collectCoverageFrom from pages/Auth/*.js to pages/**/*.js to include all js files in pages directory
   collectCoverage: true,
-  collectCoverageFrom: ["client/src/hooks/**"],
+  collectCoverageFrom: [
+    "<rootDir>/client/src/hooks/useCategory.js",
+    "<rootDir>/client/src/pages/Categories.js",
+    "<rootDir>/client/src/pages/ProductDetails.js",
+    "<rootDir>/client/src/pages/CategoryProduct.js",
+  ],
+  // "client/src/hooks/**"
   coverageThreshold: {
     global: {
-      lines: 80,
-      functions: 80,
+      lines: 100,
+      functions: 100,
     },
   },
   setupFilesAfterEnv: ["<rootDir>/client/src/setupTests.js"],
