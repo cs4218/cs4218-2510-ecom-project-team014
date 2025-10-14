@@ -52,6 +52,14 @@ const slugify = (await import("slugify")).default;
 describe("Category Controllers", () => {
   let req, res;
 
+  let consoleSpy;
+  beforeAll(() => {
+    consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+  });
+  afterAll(() => {
+    consoleSpy.mockRestore();
+  });
+
   beforeEach(() => {
     req = { body: {}, params: {} };
     res = {
@@ -210,9 +218,9 @@ describe("Category Controllers", () => {
 
     it("handles DB rejection with 500", async () => {
       const error = new Error("DB down");
-      const consoleSpy = jest
-        .spyOn(console, "log")
-        .mockImplementation(() => {});
+      // const consoleSpy = jest
+      //   .spyOn(console, "log")
+      //   .mockImplementation(() => {});
       categoryModel.find.mockRejectedValue(error);
 
       await categoryControlller(req, res);
@@ -227,7 +235,7 @@ describe("Category Controllers", () => {
         })
       );
 
-      consoleSpy.mockRestore();
+      // consoleSpy.mockRestore();
     });
   });
 
@@ -281,9 +289,9 @@ describe("Category Controllers", () => {
     it("handles DB rejection with 500", async () => {
       req.params = { slug: "err" };
       const error = new Error("DB down");
-      const consoleSpy = jest
-        .spyOn(console, "log")
-        .mockImplementation(() => {});
+      // const consoleSpy = jest
+      //   .spyOn(console, "log")
+      //   .mockImplementation(() => {});
       categoryModel.findOne.mockRejectedValue(error);
 
       await singleCategoryController(req, res);

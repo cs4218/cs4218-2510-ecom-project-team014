@@ -199,7 +199,7 @@ describe("<CategoryProduct />", () => {
     expect(screen.queryByRole("heading", { level: 5 })).not.toBeInTheDocument();
   });
 
-  it("exposes bug: clicking More Details navigates to /product/undefined if product.slug is missing (recommend guard)", async () => {
+  it("exposes bug: clicking More Details navigates to /product/undefined if product.slug is missing", async () => {
     const navigateMock = jest.fn();
     mockUseNavigateImpl.mockReturnValue(navigateMock);
 

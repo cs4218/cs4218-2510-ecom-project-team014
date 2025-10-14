@@ -16,7 +16,11 @@ export default {
 
   // "<rootDir>/controllers/*.test.js", "<rootDir>/models/*.test.js",
 
-  testMatch: ["<rootDir>/controllers/categoryController.test.js"],
+  testMatch: [
+    "<rootDir>/controllers/categoryController.test.js",
+    "<rootDir>/models/categoryModel.test.js",
+    "<rootDir>/models/productModel.test.js",
+  ],
 
   // jest code coverage
   collectCoverage: true,
@@ -24,7 +28,11 @@ export default {
   // "controllers/**", "models/**",
   //   "helpers/**",
   //   "middlewares/**"
-  collectCoverageFrom: ["<rootDir>/controllers/categoryController.js"],
+  collectCoverageFrom: [
+    "<rootDir>/controllers/categoryController.js",
+    "<rootDir>/models/categoryModel.js",
+    "<rootDir>/models/productModel.js",
+  ],
 
   coverageThreshold: {
     global: {
