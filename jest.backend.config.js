@@ -18,6 +18,8 @@ export default {
 
   testMatch: [
     "<rootDir>/controllers/categoryController.test.js",
+    "<rootDir>/controllers/productController.test.js",
+    "<rootDir>/controllers/braintreeTokenController.test.js",
     "<rootDir>/models/categoryModel.test.js",
     "<rootDir>/models/productModel.test.js",
   ],
@@ -30,6 +32,8 @@ export default {
   //   "middlewares/**"
   collectCoverageFrom: [
     "<rootDir>/controllers/categoryController.js",
+    "<rootDir>/controllers/productController.js",
+    // "<rootDir>/controllers/braintreeTokenController.js",
     "<rootDir>/models/categoryModel.js",
     "<rootDir>/models/productModel.js",
   ],
