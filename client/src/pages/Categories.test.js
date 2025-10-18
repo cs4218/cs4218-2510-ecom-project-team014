@@ -1,3 +1,5 @@
+// LLM tools were referenced to help write the test cases.
+
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
@@ -31,22 +33,23 @@ describe("<Categories />", () => {
 
     const shoes = screen.getByRole("link", { name: "Shoes" });
     const hats = screen.getByRole("link", { name: "Hats" });
-
     expect(shoes).toHaveAttribute("href", "/category/shoes");
     expect(hats).toHaveAttribute("href", "/category/hats");
   });
 
   it("renders no links when there are no categories", () => {
     useCategory.mockReturnValue([]);
+
     renderWithRouter(<Categories />);
+
     expect(screen.queryAllByRole("link")).toHaveLength(0);
   });
 
   it("does not crash if hook returns undefined (guarded by hook fix)", () => {
-    // After hardening the hook, this situation shouldn't occur.
-    // But this captures the original risk and documents expected behaviour.
     useCategory.mockReturnValue([]);
+
     renderWithRouter(<Categories />);
+
     expect(screen.queryAllByRole("link")).toHaveLength(0);
   });
 });

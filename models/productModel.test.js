@@ -1,4 +1,5 @@
-// models/productModel.test.js
+// LLM tools were referenced to help write the test cases.
+
 import { jest } from "@jest/globals";
 
 // In case any other test mocked mongoose/model earlier:
@@ -18,7 +19,7 @@ const isRequired = (schemaPath) => {
 };
 
 describe("Products schema (unit test - assert paths and types of schema fields)", () => {
-  test("has expected paths & types", () => {
+  it("has expected paths & types", () => {
     const s = Products.schema;
 
     // simple string fields
@@ -42,7 +43,7 @@ describe("Products schema (unit test - assert paths and types of schema fields)"
     expect(s.path("photo.contentType").instance).toBe("String");
   });
 
-  test("required flags present on required fields", () => {
+  it("required flags present on required fields", () => {
     const s = Products.schema;
     expect(isRequired(s.path("name"))).toBe(true);
     expect(isRequired(s.path("slug"))).toBe(true);
@@ -57,7 +58,7 @@ describe("Products schema (unit test - assert paths and types of schema fields)"
     expect(isRequired(s.path("photo.contentType"))).toBe(false);
   });
 
-  test("timestamps enabled and expose createdAt/updatedAt Date paths", () => {
+  it("timestamps enabled and expose createdAt/updatedAt Date paths", () => {
     const s = Products.schema;
     expect(s.options.timestamps).toBe(true);
     expect(s.path("createdAt").instance).toBe("Date");

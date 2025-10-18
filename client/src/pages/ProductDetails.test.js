@@ -1,3 +1,5 @@
+// LLM tools were referenced to help write the test cases.
+
 import React from "react";
 import {
   render,
@@ -79,14 +81,12 @@ describe("unit test: <ProductDetails />", () => {
     renderWithRouter(<ProductDetails />);
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
-
     // Main product image (use exact name)
     const mainImg = screen.getByRole("img", { name: "Mint Runner" });
     expect(mainImg).toHaveAttribute(
       "src",
       "/api/v1/product/product-photo/p123"
     );
-
     expect(axios.get).toHaveBeenNthCalledWith(
       1,
       "/api/v1/product/get-product/mint-runner"
@@ -105,7 +105,6 @@ describe("unit test: <ProductDetails />", () => {
 
     // No API calls should happen
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(0));
-
     expect(
       screen.getByRole("heading", { name: /product details/i })
     ).toBeInTheDocument();
@@ -132,8 +131,6 @@ describe("unit test: <ProductDetails />", () => {
 
     renderWithRouter(<ProductDetails />);
 
-    // Will crash when checking relatedProducts.length if code not hardened to default to []
-    // Will pass after hardening:
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
     expect(
       await screen.findByText(/no similar products found/i)
@@ -144,7 +141,6 @@ describe("unit test: <ProductDetails />", () => {
   it("navigates when clicking More Details on a related product", async () => {
     const navigateMock = jest.fn();
     mockUseNavigateImpl.mockReturnValue(navigateMock);
-
     axios.get
       .mockResolvedValueOnce({ data: productResponse })
       .mockResolvedValueOnce({ data: relatedResponse });
@@ -157,16 +153,13 @@ describe("unit test: <ProductDetails />", () => {
     });
     const proCard = proHeading.closest(".card");
     const btn = within(proCard).getByRole("button", { name: /more details/i });
-
     fireEvent.click(btn);
-
     expect(navigateMock).toHaveBeenCalledWith("/product/mint-runner-pro");
   });
 
   it("does not navigate if related product has no slug (guarded)", async () => {
     const navigateMock = jest.fn();
     mockUseNavigateImpl.mockReturnValue(navigateMock);
-
     const badRelated = {
       products: [{ ...relatedResponse.products[0], slug: undefined }],
     };
@@ -182,8 +175,6 @@ describe("unit test: <ProductDetails />", () => {
     const card = heading.closest(".card");
     const btn = within(card).getByRole("button", { name: /more details/i });
     fireEvent.click(btn);
-
-    // current code will call '/product/undefined' (bug); after fix, expect no call:
     expect(navigateMock).not.toHaveBeenCalled();
   });
 
@@ -202,9 +193,7 @@ describe("unit test: <ProductDetails />", () => {
   it("logs error and does not crash when related products request failed", async () => {
     mockUseParamsImpl.mockReturnValue({ slug: "mint-runner" });
     mockUseNavigateImpl.mockReturnValue(jest.fn());
-
     const logSpy = jest.spyOn(console, "log").mockImplementation(() => {});
-
     axios.get
       .mockResolvedValueOnce({ data: productResponse }) // get-product success
       .mockRejectedValueOnce(new Error("Network error")); // error
@@ -214,7 +203,6 @@ describe("unit test: <ProductDetails />", () => {
     // first request happened; second attempted and failed
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
     await waitFor(() => expect(logSpy).toHaveBeenCalled());
-
     // With no related products set (state remains []), empty-state shows:
     expect(
       await screen.findByText(/no similar products found/i)

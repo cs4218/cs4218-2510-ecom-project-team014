@@ -1,19 +1,5 @@
-// import {
-//   createCategoryController,
-//   updateCategoryController,
-//   deleteCategoryCOntroller,
-//   categoryControlller,
-//   singleCategoryController,
-// } from "../controllers/categoryController.js";
-// import categoryModel from "../models/categoryModel.js";
-// import slugify from "slugify";
+// LLM tools were referenced to help write the test cases.
 
-// jest.mock("../models/categoryModel.js");
-// jest.mock("slugify");
-
-/**
- * @jest-environment node - ESM-style for testing backend
- */
 import { jest } from "@jest/globals";
 
 const SaveMock = jest.fn(); // we’ll reuse per test
@@ -51,7 +37,6 @@ const slugify = (await import("slugify")).default;
 
 describe("Category Controllers", () => {
   let req, res;
-
   let consoleSpy;
   beforeAll(() => {
     consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
@@ -218,9 +203,6 @@ describe("Category Controllers", () => {
 
     it("handles DB rejection with 500", async () => {
       const error = new Error("DB down");
-      // const consoleSpy = jest
-      //   .spyOn(console, "log")
-      //   .mockImplementation(() => {});
       categoryModel.find.mockRejectedValue(error);
 
       await categoryControlller(req, res);
@@ -234,8 +216,6 @@ describe("Category Controllers", () => {
           message: "Error while getting all categories",
         })
       );
-
-      // consoleSpy.mockRestore();
     });
   });
 
@@ -289,9 +269,6 @@ describe("Category Controllers", () => {
     it("handles DB rejection with 500", async () => {
       req.params = { slug: "err" };
       const error = new Error("DB down");
-      // const consoleSpy = jest
-      //   .spyOn(console, "log")
-      //   .mockImplementation(() => {});
       categoryModel.findOne.mockRejectedValue(error);
 
       await singleCategoryController(req, res);

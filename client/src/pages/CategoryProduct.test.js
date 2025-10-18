@@ -1,3 +1,5 @@
+// LLM tools were referenced to help write the test cases.
+
 import React from "react";
 import {
   render,
@@ -72,12 +74,10 @@ describe("<CategoryProduct />", () => {
 
     // Wait until the request fired (and state flushed)
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
-
     // Correct URL
     expect(axios.get).toHaveBeenCalledWith(
       "/api/v1/product/product-category/shoes"
     );
-
     // Headings
     expect(
       await screen.findByRole("heading", { name: /category - shoes/i })
@@ -85,7 +85,6 @@ describe("<CategoryProduct />", () => {
     expect(screen.getByText(/result found/i)).toHaveTextContent(
       "2 result found"
     );
-
     // Cards
     for (const p of products) {
       const title = await screen.findByRole("heading", {
@@ -94,20 +93,17 @@ describe("<CategoryProduct />", () => {
       });
       const card = title.closest(".card");
       expect(card).toBeInTheDocument();
-
       // Image src
       const img = within(card).getByRole("img", { name: p.name });
       expect(img).toHaveAttribute(
         "src",
         `/api/v1/product/product-photo/${p._id}`
       );
-
       // USD price formatting
       const price = within(card).getByText(/\$/);
       expect(price).toHaveTextContent(
         p.price.toLocaleString("en-US", { style: "currency", currency: "USD" })
       );
-
       // More Details button present
       expect(
         within(card).getByRole("button", { name: /more details/i })
@@ -121,7 +117,6 @@ describe("<CategoryProduct />", () => {
     renderWithRouter(<CategoryProduct />);
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
-
     expect(
       await screen.findByRole("heading", { name: /category - shoes/i })
     ).toBeInTheDocument();
@@ -148,7 +143,6 @@ describe("<CategoryProduct />", () => {
     });
     const proCard = proHeading.closest(".card");
     const btn = within(proCard).getByRole("button", { name: /more details/i });
-
     fireEvent.click(btn);
     expect(navigateMock).toHaveBeenCalledWith("/product/mint-runner-pro");
   });
@@ -161,7 +155,6 @@ describe("<CategoryProduct />", () => {
 
     // No API call when slug missing
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(0));
-
     // Base UI still renders (layout + headings)
     expect(
       screen.getByRole("heading", { name: /category -/i })
@@ -189,20 +182,17 @@ describe("<CategoryProduct />", () => {
     renderWithRouter(<CategoryProduct />);
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
-
     // Should now show "0 result found"
     expect(screen.getByText(/result found/i)).toHaveTextContent(
       "0 result found"
     );
-
     // Still no cards rendered
     expect(screen.queryByRole("heading", { level: 5 })).not.toBeInTheDocument();
   });
 
-  it("exposes bug: clicking More Details navigates to /product/undefined if product.slug is missing", async () => {
+  it("BUG: clicking More Details navigates to /product/undefined if product.slug is missing", async () => {
     const navigateMock = jest.fn();
     mockUseNavigateImpl.mockReturnValue(navigateMock);
-
     const bad = {
       category,
       products: [{ ...products[0], slug: undefined }], // missing slug
@@ -217,9 +207,7 @@ describe("<CategoryProduct />", () => {
     });
     const card = heading.closest(".card");
     const btn = within(card).getByRole("button", { name: /more details/i });
-
     fireEvent.click(btn);
-
     // error if not hardened
     expect(navigateMock).not.toHaveBeenCalled();
   });

@@ -1,3 +1,5 @@
+// LLM tools were referenced to help write the test cases.
+
 import { renderHook, waitFor } from "@testing-library/react";
 import useCategory from "./useCategory";
 import axios from "axios";
@@ -18,12 +20,10 @@ describe("useCategory", () => {
 
     // check initial state
     expect(result.current).toEqual([]);
-
     // check successful data fetch
     await waitFor(() => {
       expect(result.current).toEqual(payload);
     });
-
     expect(axios.get).toHaveBeenCalled();
     expect(axios.get).toHaveBeenCalledWith("/api/v1/category/get-category");
   });
@@ -37,7 +37,6 @@ describe("useCategory", () => {
     await waitFor(() => {
       expect(axios.get).toHaveBeenCalled();
     });
-
     expect(result.current).toEqual([]);
     expect(logSpy).toHaveBeenCalled(); // no need to specify 1 time to allow flexibility for future changes in implementation
     logSpy.mockRestore();
@@ -51,18 +50,11 @@ describe("useCategory", () => {
 
     expect(result.current).toEqual([]);
     const initialRef = result.current; // keep the array reference from render #1
-
     // effect started (axios called)
     await waitFor(() => expect(axios.get).toHaveBeenCalled());
-
     // prove a re-render happened by waiting for the reference to change
     // (setCategories always queues a render - both buggy and hardened versions are expected to change the ref)
     await waitFor(() => expect(result.current).not.toBe(initialRef));
-
-    // post-effect values:
-    // - un-hardened hook (buggy) -> undefined  (this assertion FAILS)
-    // - hardened hook (hardened) -> []         (this assertion PASSES)
-
     expect(result.current).toEqual([]);
   });
 });

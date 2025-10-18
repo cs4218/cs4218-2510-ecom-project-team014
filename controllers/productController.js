@@ -73,14 +73,14 @@ export const getProductController = async (req, res) => {
     res.status(200).send({
       success: true,
       counTotal: products.length,
-      message: "ALlProducts ",
+      message: "AllProducts ",
       products,
     });
   } catch (error) {
     console.log(error);
     res.status(500).send({
       success: false,
-      message: "Erorr in getting products",
+      message: "Error in getting products",
       error: error.message,
     });
   }
@@ -101,29 +101,11 @@ export const getSingleProductController = async (req, res) => {
     console.log(error);
     res.status(500).send({
       success: false,
-      message: "Eror while getitng single product",
+      message: "Error while getitng single product",
       error,
     });
   }
 };
-
-// get photo
-// export const productPhotoController = async (req, res) => {
-//   try {
-//     const product = await productModel.findById(req.params.pid).select("photo");
-//     if (product.photo.data) {
-//       res.set("Content-type", product.photo.contentType);
-//       return res.status(200).send(product.photo.data);
-//     }
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send({
-//       success: false,
-//       message: "Erorr while getting photo",
-//       error,
-//     });
-//   }
-// };
 
 export const productPhotoController = async (req, res) => {
   try {
@@ -224,28 +206,6 @@ export const updateProductController = async (req, res) => {
 };
 
 // filters
-// export const productFiltersController = async (req, res) => {
-//   try {
-//     const { checked, radio } = req.body;
-//     let args = {};
-//     if (checked.length > 0) args.category = checked;
-//     if (radio.length) args.price = { $gte: radio[0], $lte: radio[1] };
-//     const products = await productModel.find(args);
-//     res.status(200).send({
-//       success: true,
-//       products,
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(400).send({
-//       success: false,
-//       message: "Error WHile Filtering Products",
-//       error,
-//     });
-//   }
-// };
-
-// filters
 export const productFiltersController = async (req, res) => {
   try {
     // only this line is new to handle undefined filter input
@@ -284,31 +244,6 @@ export const productCountController = async (req, res) => {
     });
   }
 };
-
-// product list base on page
-// export const productListController = async (req, res) => {
-//   try {
-//     const perPage = 6;
-//     const page = req.params.page ? req.params.page : 1;
-//     const products = await productModel
-//       .find({})
-//       .select("-photo")
-//       .skip((page - 1) * perPage)
-//       .limit(perPage)
-//       .sort({ createdAt: -1 });
-//     res.status(200).send({
-//       success: true,
-//       products,
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(400).send({
-//       success: false,
-//       message: "error in per page ctrl",
-//       error,
-//     });
-//   }
-// };
 
 // productListController (hardened minimally)
 export const productListController = async (req, res) => {
@@ -388,39 +323,6 @@ export const realtedProductController = async (req, res) => {
     });
   }
 };
-
-// similar products
-// export const realtedProductController = async (req, res) => {
-//   try {
-//     const { pid, cid } = req.params || {};
-//     if (!cid) {
-//       return res
-//         .status(400)
-//         .send({ success: false, message: "Missing category id (cid)" });
-//     }
-//     if (!pid) {
-//       return res
-//         .status(400)
-//         .send({ success: false, message: "Missing product id (pid)" });
-//     }
-
-//     const products = await productModel
-//       .find({ category: cid, _id: { $ne: pid } })
-//       .select("-photo")
-//       .limit(3)
-//       .populate("category")
-//       .lean();
-
-//     return res.status(200).send({ success: true, products });
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(400).send({
-//       success: false,
-//       message: "Error while getting related products",
-//       error: error?.message ?? String(error),
-//     });
-//   }
-// };
 
 // get prdocyst by catgory
 export const productCategoryController = async (req, res) => {
