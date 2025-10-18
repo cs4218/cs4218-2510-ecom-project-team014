@@ -179,4 +179,16 @@ https://github.com/cs4218/cs4218-2510-ecom-project-team014/actions/runs/17570205
    - Write unit tests for Protected Routes feature 
    - Write unit tests for Registrtion feature 
    - Write unit tests for Login feature
-   - Write unit tests for Admin Dashboard feature 
+   - Write unit tests for Admin Dashboard feature
+
+Project Milestone 1 Testing Scope - Dedrick Poh Kai Kiat
+1. hooks/useCategory.js
+2. pages/Categories.js
+3. pages/ProductDetails.js
+4. pages/CategoryProduct.js
+5. pages/admin/Users.js
+6. models/categoryModel.js
+7. models/productModel.js
+8. controllers/categoryController.js - Only categoryController, singleCategoryController
+9. controllers/productController.js - Only getProductController, getSingleProductController, productPhotoController, productFiltersController, productCountController, productListController, searchProductController, realtedProductController, productCategoryController
+
