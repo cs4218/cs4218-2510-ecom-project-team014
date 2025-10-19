@@ -49,7 +49,7 @@ describe('Spinner', () => {
   });
 
   // 4. Ensures the count updates correctly each second with default path
-  it('updates the displayed count each second', () => {
+  it('updates the displayed count each second - default path', () => {
     const { getByText } = render(<Spinner />);
     expect(getByText(/redirecting to you in 3 second/i)).toBeInTheDocument();
     act(() => {
@@ -63,7 +63,7 @@ describe('Spinner', () => {
   });
 
   // 5. Ensures the count updates correctly each second with custom path
-  it('updates the displayed count each second', () => {
+  it('updates the displayed count each second - custom path', () => {
     const { getByText } = render(<Spinner path="dashboard"/>);
     expect(getByText(/redirecting to you in 3 second/i)).toBeInTheDocument();
     act(() => {
