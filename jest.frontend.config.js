@@ -21,7 +21,7 @@ export default {
 
   // only run these tests
   testMatch: [
-    "<rootDir>/client/src/pages/user/Profile.test.js",
+    "<rootDir>/client/src/integration_tests/*.test.js"
   ],
 
   // jest code coverage
@@ -29,6 +29,7 @@ export default {
   collectCoverage: true,
   collectCoverageFrom: [
     "<rootDir>/client/src/pages/user/Profile.js",
+    "<rootDir>/client/src/components/Layout.js"
   ],
   // "client/src/hooks/**"
   coverageThreshold: {
