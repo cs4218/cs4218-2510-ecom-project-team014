@@ -192,3 +192,12 @@ Project Milestone 1 Testing Scope - Dedrick Poh Kai Kiat
 8. controllers/categoryController.js - Only categoryController, singleCategoryController
 9. controllers/productController.js - Only getProductController, getSingleProductController, productPhotoController, productFiltersController, productCountController, productListController, searchProductController, realtedProductController, productCategoryController
 
+Project Milestone 1 Testing Scope - Daniel David Zhang
+1. components/pages/user/Order.js
+2. components/pages/user/Profile.js
+3. components/Footer.js
+4. components/Header.js
+5. components/Layout.js
+6. components/Spinner.js
+7. components/pages/About.js
+8. components.pages/Pagenotfound.js
