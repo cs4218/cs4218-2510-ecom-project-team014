@@ -19,10 +19,10 @@ jest.mock("react-hot-toast", () => ({
   Toaster: () => <div data-testid="mock-toaster" />,
 }));
 
-
+// import layout after the mocks to use them
 import Layout from "../components/Layout";
 
-describe("Layout integration tests (real Header/Footer/Helmet)", () => {
+describe("Layout integration tests", () => {
   beforeEach(() => {
     document.head.innerHTML = "";
     document.title = "";
@@ -60,7 +60,7 @@ describe("Layout integration tests (real Header/Footer/Helmet)", () => {
         document.querySelector(".footer")
     ).toBeTruthy();
 
-    // import layout after the mocks because we want to use the fake hooks
+    
     await waitFor(() => {
       const titleEl = document.querySelector("title");
       const titleText = titleEl ? titleEl.textContent : document.title;

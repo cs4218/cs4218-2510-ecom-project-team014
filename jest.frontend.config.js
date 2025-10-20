@@ -28,8 +28,12 @@ export default {
   // Daniel: Updated collectCoverageFrom from pages/Auth/*.js to pages/**/*.js to include all js files in pages directory
   collectCoverage: true,
   collectCoverageFrom: [
+    "<rootDir>/client/src/pages/About.js",
     "<rootDir>/client/src/pages/user/Profile.js",
-    "<rootDir>/client/src/components/Layout.js"
+    "<rootDir>/client/src/pages/user/Orders.js",
+    "<rootDir>/client/src/pages/Pagenotfound.js",
+    "<rootDir>/client/src/components/Layout.js",
+    "<rootDir>/client/src/components/Spinner.js"
   ],
   // "client/src/hooks/**"
   coverageThreshold: {
