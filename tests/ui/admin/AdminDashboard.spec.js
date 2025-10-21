@@ -66,3 +66,5 @@ test.describe('Admin Dashboard Page (E2E)', () => {
     await expect(page).toHaveURL(/dashboard\/admin\/orders/);
   });
 });
+
+// Above tests are generated with the help of AI
