@@ -383,6 +383,14 @@ export const brainTreePaymentController = async (req, res) => {
         return res.status(400).send({ok: false, message: `Invalid price for product ${product.name}`})
       }
 
+      // CRITICAL SECURITY: Reject if client-provided price doesn't match DB price
+      if (item.price !== undefined && item.price !== product.price) {
+        return res.status(400).send({
+          ok: false,
+          message: `Price mismatch for product ${product.name}. Expected: ${product.price}, Received: ${item.price}`
+        })
+      }
+
       // Check if requested quantity is available
       const requestedQuantity = item.quantity || 1;
       if (!product.quantity || (product.quantity < requestedQuantity)) {
