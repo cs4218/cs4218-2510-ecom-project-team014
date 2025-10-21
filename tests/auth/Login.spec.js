@@ -30,7 +30,6 @@ test.describe('Login Page UI', () => {
   });
 
   test('login success redirects user', async ({ page }) => {
-    // OPTION: Use Playwright's network mocking to simulate a successful API response.
     await page.route('**/api/v1/auth/login', async route =>
       route.fulfill({
         status: 200,
@@ -46,10 +45,7 @@ test.describe('Login Page UI', () => {
     await page.getByPlaceholder('Enter Your Email').fill('test@example.com');
     await page.getByPlaceholder('Enter Your Password').fill('password123');
     await page.getByRole('button', { name: 'LOGIN' }).click();
-    // Assert redirect, or expected change in UI
     await expect(page).not.toHaveURL(LOGIN_URL);
-    // Optionally, check for success toast if it's visible in UI
-    // await expect(page.getByText('Login successful')).toBeVisible();
   });
 
   test('shows error for invalid credentials', async ({ page }) => {
@@ -69,12 +65,63 @@ test.describe('Login Page UI', () => {
     await expect(page.getByText('Invalid email')).toBeVisible();
   });
 
+  test('should not be able to submit empty form', async ({ page }) => {
+    await page.getByRole('button', { name: 'LOGIN' }).click();
+    await expect(page).toHaveURL(LOGIN_URL); // Still on login page
+  });
+
+  test('should not be able to login when email is empty', async ({ page }) => {
+    await page.getByPlaceholder('Enter Your Password').fill('password123');
+    await page.getByRole('button', { name: 'LOGIN' }).click();
+    await expect(page).toHaveURL(LOGIN_URL); // Still on login page
+  });
+
+  test('should not be able to login when password is empty', async ({ page }) => {
+    await page.getByPlaceholder('Enter Your Email').fill('test@example.com');
+    await page.getByRole('button', { name: 'LOGIN' }).click();
+    await expect(page).toHaveURL(LOGIN_URL); // Still on login page
+  });
+
+
+  test('should show error if email is not registered', async ({ page }) => {
+    await page.route('**/api/v1/auth/login', async route => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: false,
+          message: "Email is not registerd"
+        }),
+      });
+    });
+    await page.getByPlaceholder('Enter Your Email').fill('notregistered@example.com');
+    await page.getByPlaceholder('Enter Your Password').fill('password123');
+    await page.getByRole('button', { name: 'LOGIN' }).click();
+    await expect(page.getByText(/Email is not registerd/i)).toBeVisible();
+  });
+
+  test('should show error if password is invalid', async ({ page }) => {
+    await page.route('**/api/v1/auth/login', async route => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: false,
+          message: "Invalid Password"
+        }),
+      });
+    });
+    await page.getByPlaceholder('Enter Your Email').fill('registered@example.com');
+    await page.getByPlaceholder('Enter Your Password').fill('wrongpassword');
+    await page.getByRole('button', { name: 'LOGIN' }).click();
+    await expect(page.getByText(/Invalid Password/i)).toBeVisible();
+  });
+
   test('shows error on API/network error', async ({ page }) => {
     await page.route('**/api/v1/auth/login', route => route.abort());
     await page.getByPlaceholder('Enter Your Email').fill('test@example.com');
     await page.getByPlaceholder('Enter Your Password').fill('password123');
     await page.getByRole('button', { name: 'LOGIN' }).click();
-    // Assuming your UI shows 'Something went wrong'
     await expect(page.getByText('Something went wrong')).toBeVisible();
   });
 
@@ -88,10 +135,10 @@ test.describe('Login Page UI', () => {
     expect(active).toContain('Enter Your Email');
   });
 
-  // Optionally, add test for required fields by clearing inputs and attempting submit
   test('shows validation error if fields empty', async ({ page }) => {
     await page.getByRole('button', { name: 'LOGIN' }).click();
-    // You may need to check for browser validation UI, or assert the page did not redirect
-    await expect(page).toHaveURL(LOGIN_URL); // Still on login page
+    await expect(page).toHaveURL(LOGIN_URL); 
   });
 });
+
+// Above tests are generated with the help of AI
