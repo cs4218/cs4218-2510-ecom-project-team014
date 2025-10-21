@@ -191,12 +191,22 @@ https://github.com/cs4218/cs4218-2510-ecom-project-team014/actions/runs/17570205
    - pages/admin/AdminOrders.test.js
 
 
-**Project Workload for Milestone 1**
-**WONG XU CHENG**
+## WONG XU CHENG
+## Tests are generated with the help of AI
+## Milestone 1
    - Write unit tests for Protected Routes feature 
    - Write unit tests for Registrtion feature 
    - Write unit tests for Login feature
    - Write unit tests for Admin Dashboard feature
+
+## Milestone 2
+   - Write integration tests for Protected Routes feature 
+   - Write integration tests for Registrtion feature 
+   - Write integration tests for Login feature
+   - Write integration tests for Admin Dashboard feature
+   - Write UI tests for Login Page
+   - Write UI tests for Registration Page
+   - Write UI tests for Admin Dashboard Page
 
 Project Milestone 1 Testing Scope - Dedrick Poh Kai Kiat
 1. hooks/useCategory.js
