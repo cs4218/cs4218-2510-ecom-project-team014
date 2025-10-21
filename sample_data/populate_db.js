@@ -14,15 +14,13 @@ configDotenv();
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-await connectDB();
-
-const loadJSONFile = (filename) => {
+export const loadJSONFile = (filename) => {
   const filePath = path.join(__dirname, filename);
   const data = fs.readFileSync(filePath, 'utf-8');
   return JSON.parse(data);
 };
 
-const hashPassword = async (password) => {
+export const hashPassword = async (password) => {
   try {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -34,17 +32,17 @@ const hashPassword = async (password) => {
 };
 
 // Function to convert MongoDB extended JSON format
-const convertMongoId = (obj) => {
+export const convertMongoId = (obj) => {
   if (obj && obj.$oid) return new mongoose.Types.ObjectId(obj.$oid);
   return obj;
 };
 
-const convertDate = (obj) => {
+export const convertDate = (obj) => {
   if (obj && obj.$date) return new Date(obj.$date);
   return obj;
 };
 
-const processDocument = (doc) => {
+export const processDocument = (doc) => {
   const processed = {};
   for (const [key, value] of Object.entries(doc)) {
     if (key === '_id') {
@@ -67,8 +65,15 @@ const processDocument = (doc) => {
   return processed;
 };
 
-const populateData = async () => {
+export const populateData = async (mongoUri = null) => {
   try {
+    if (mongoUri) {
+      await mongoose.connect(mongoUri);
+      console.log("Connected to test database");
+    } else {
+      await connectDB();
+    }
+
     console.log("Starting database population...\n");
 
     // Clear existing data
@@ -147,11 +152,20 @@ Summary:
 - Orders: ${insertedOrders.length}
     `);
 
-    process.exit(0);
+    return {
+      categoriesCount: insertedCategories.length,
+      usersCount: insertedUsers.length,
+      productsCount: insertedProducts.length,
+      ordersCount: insertedOrders.length
+    };
   } catch (error) {
     console.error("\n❌ Error populating database:", error);
-    process.exit(1);
+    throw error;
   }
 };
 
-populateData();
+if (import.meta.url === `file://${process.argv[1]}`) {
+  populateData()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));
+}

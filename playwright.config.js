@@ -5,6 +5,9 @@ export default defineConfig({
 
   timeout: 30 * 1000,
 
+  globalSetup: './tests/global-setup.js',
+  globalTeardown: './tests/global-teardown.js',
+
   // Test execution settings
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
