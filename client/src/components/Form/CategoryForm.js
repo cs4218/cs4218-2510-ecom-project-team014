@@ -1,9 +1,9 @@
 import React from "react";
 
-const CategoryForm = ({ handleSubmit, value, setValue }) => {
+const CategoryForm = ({ handleSubmit, value, setValue, testIdPrefix = "" }) => {
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} data-testid={`${testIdPrefix}-form`}>
         <div className="mb-3">
           <input
             type="text"
@@ -11,10 +11,11 @@ const CategoryForm = ({ handleSubmit, value, setValue }) => {
             placeholder="Enter new category"
             value={value}
             onChange={(e) => setValue(e.target.value)}
+            data-testid={`${testIdPrefix}-input`}
           />
         </div>
 
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="btn btn-primary"  data-testid={`${testIdPrefix}-submit`}>
           Submit
         </button>
       </form>

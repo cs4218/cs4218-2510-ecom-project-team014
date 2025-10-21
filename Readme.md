@@ -151,6 +151,7 @@ https://github.com/cs4218/cs4218-2510-ecom-project-team014/actions/runs/17570205
 
 ## Yu Miao
 ## Test cases are generated with the help from AI
+## MS1
 1. Admin Actions
    - pages/admin/CreateCategory.js
    - pages/admin/CreateProduct.js
@@ -172,6 +173,22 @@ https://github.com/cs4218/cs4218-2510-ecom-project-team014/actions/runs/17570205
    - components/UserMenu.js
    - pages/user/Dashboard.js
    - models/userModel.js
+## MS2
+1. Integration Test
+   - pages/admin/CreateCategory.test.js
+   - controllers/categoryController.test.js - createCategoryController, updateCategoryController, deleteCategoryController
+   - pages/admin/CreateProduct.test.js
+   - pages/admin/UpdateProduct.test.js
+   - pages/admin/Product.test.js
+   - controllers/productController.test.js - createProductController, deleteProductController, updateProductController
+   - pages/admin/AdminOrders.test.js
+
+2. UI Test
+   - Components/Form/CategoryForm.test.js and pages/admin/CreateCategory.test.js
+   - pages/admin/CreateProduct.test.js
+   - pages/admin/UpdateProduct.test.js
+   - pages/admin/Product.test.js
+   - pages/admin/AdminOrders.test.js
 
 
 **Project Workload for Milestone 1**

@@ -19,17 +19,29 @@ const CreateProduct = () => {
   const [photo, setPhoto] = useState("");
 
   //get all category
+  // const getAllCategory = async () => {
+  //   try {
+  //     const { data } = await axios.get("/api/v1/category/get-category");
+  //     if (data?.success) {
+  //       setCategories(data?.category);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error("Something went wrong in getting catgeory");
+  //   }
+  // };
   const getAllCategory = async () => {
-    try {
-      const { data } = await axios.get("/api/v1/category/get-category");
-      if (data?.success) {
-        setCategories(data?.category);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong in getting catgeory");
+  try {
+    const response = await axios.get("/api/v1/category/get-category");
+    const data = response?.data; // safely access data
+    if (data?.success) {
+      setCategories(data?.category);
     }
-  };
+  } catch (error) {
+    console.log(error);
+    toast.error("Something went wrong in getting category");
+  }
+};
   const handleShippingChange = (value) => {
   setShipping(value); 
 };
@@ -102,7 +114,7 @@ const handleCategoryChange = (value) => {
               >
                 {categories?.map((c) => (
                   <Option key={c._id} value={c._id}>
-                    {c.name}
+                    {String(c.name)}
                   </Option>
                 ))}
               </Select>
