@@ -384,6 +384,8 @@ export const brainTreePaymentController = async (req, res) => {
       }
 
       // CRITICAL SECURITY: Reject if client-provided price doesn't match DB price
+      // Note: This makes price optional in the cart, but we want to enforce the client
+      // to include it so that there is never any confusion about the total price between client and our DB source of truth.
       if (item.price !== undefined && item.price !== product.price) {
         return res.status(400).send({
           ok: false,
