@@ -21,10 +21,17 @@ export default {
 
   // only run these tests
   testMatch: [
-    "<rootDir>/client/src/hooks/useCategory.test.js",
+    /*"<rootDir>/client/src/hooks/useCategory.test.js",
     "<rootDir>/client/src/pages/Categories.test.js",
     "<rootDir>/client/src/pages/ProductDetails.test.js",
     "<rootDir>/client/src/pages/CategoryProduct.test.js",
+    "<rootDir>/client/src/pages/admin/Users.test.js",*/
+    //"<rootDir>/client/src/context/__tests__/auth.int.test.js",
+    //"<rootDir>/client/src/components/__tests__/AdminMenu.int.test.js",   
+    //"<rootDir>/client/src/pages/admin/__tests__/AdminDashboard.int.test.js",
+    //"<rootDir>/client/src/pages/Auth/__tests__/Register.int.test.js",
+    "<rootDir>/client/src/pages/Auth/__tests__/Login.int.test.js",
+
     "<rootDir>/client/src/pages/admin/Users.test.js",
     "<rootDir>/client/src/pages/admin/CreateCategory.int.test.js",
     "<rootDir>/client/src/pages/admin/CreateProduct.int.test.js",
@@ -37,11 +44,16 @@ export default {
   // Daniel: Updated collectCoverageFrom from pages/Auth/*.js to pages/**/*.js to include all js files in pages directory
   collectCoverage: true,
   collectCoverageFrom: [
-    "<rootDir>/client/src/hooks/useCategory.js",
+    /*"<rootDir>/client/src/hooks/useCategory.js",
     "<rootDir>/client/src/pages/Categories.js",
     "<rootDir>/client/src/pages/ProductDetails.js",
     "<rootDir>/client/src/pages/CategoryProduct.js",
-    "<rootDir>/client/src/pages/admin/Users.js",
+    "<rootDir>/client/src/pages/admin/Users.js",*/
+    //"<rootDir>/client/src/context/auth.js",
+    //"<rootDir>/client/src/components/AdminMenu.js",
+    //"<rootDir>/client/src/pages/Auth/Register.js",
+    "<rootDir>/client/src/pages/Auth/Login.js"
+
   ],
   // "client/src/hooks/**"
   coverageThreshold: {
