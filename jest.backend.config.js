@@ -16,7 +16,9 @@ export default {
     "<rootDir>/models/categoryModel.test.js",
     "<rootDir>/models/productModel.test.js",*/
     //"<rootDir>/tests/integration/helpers/authHelper.int.test.js",
-    "<rootDir>/tests/integration/middlewares/authMiddleware.int.test.js",    
+    //"<rootDir>/tests/integration/middlewares/authMiddleware.int.test.js",
+    "<rootDir>/tests/integration/controllers/authController.int.test.js",    
+    
   ],
 
   // jest code coverage
@@ -28,7 +30,7 @@ export default {
     //"<rootDir>/models/categoryModel.js",
     //"<rootDir>/models/productModel.js",
     //"<rootDir>/helpers/authHelper.js",
-    "<rootDir>/middlewares/authMiddleware.js",
+    "<rootDir>/controllers/authController.js",
   ],
 
   coverageThreshold: {
