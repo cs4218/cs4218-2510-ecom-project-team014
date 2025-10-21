@@ -1,5 +1,5 @@
 TN:
-SF:client/src/hooks/useCategory.js
+SF:client\src\hooks\useCategory.js
 FN:4,useCategory
 FN:8,(anonymous_1)
 FN:18,(anonymous_2)
@@ -26,7 +26,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:client/src/pages/Categories.js
+SF:client\src\pages\Categories.js
 FN:5,(anonymous_0)
 FN:11,(anonymous_1)
 FNF:2
@@ -43,7 +43,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:client/src/pages/CategoryProduct.js
+SF:client\src\pages\CategoryProduct.js
 FN:6,(anonymous_0)
 FN:12,(anonymous_1)
 FN:15,(anonymous_2)
@@ -84,7 +84,7 @@ BRF:6
 BRH:6
 end_of_record
 TN:
-SF:client/src/pages/ProductDetails.js
+SF:client\src\pages\ProductDetails.js
 FN:7,(anonymous_0)
 FN:14,(anonymous_1)
 FN:18,(anonymous_2)
@@ -134,7 +134,7 @@ BRF:8
 BRH:8
 end_of_record
 TN:
-SF:client/src/pages/admin/Users.js
+SF:client\src\pages\admin\Users.js
 FN:5,(anonymous_0)
 FNF:1
 FNH:1
