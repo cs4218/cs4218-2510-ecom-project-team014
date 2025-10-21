@@ -30,8 +30,14 @@ export default {
     //"<rootDir>/client/src/components/__tests__/AdminMenu.int.test.js",   
     //"<rootDir>/client/src/pages/admin/__tests__/AdminDashboard.int.test.js",
     //"<rootDir>/client/src/pages/Auth/__tests__/Register.int.test.js",
-    "<rootDir>/client/src/pages/Auth/__tests__/Login.int.test.js"
+    "<rootDir>/client/src/pages/Auth/__tests__/Login.int.test.js",
 
+    "<rootDir>/client/src/pages/admin/Users.test.js",
+    "<rootDir>/client/src/pages/admin/CreateCategory.int.test.js",
+    "<rootDir>/client/src/pages/admin/CreateProduct.int.test.js",
+    "<rootDir>/client/src/pages/admin/products.int.test.js",
+    "<rootDir>/client/src/pages/admin/UpdateProduct.int.test.js",
+    "<rootDir>/client/src/pages/admin/AdminOrders.int.test.js"
   ],
 
   // jest code coverage

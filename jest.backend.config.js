@@ -19,6 +19,9 @@ export default {
     //"<rootDir>/tests/integration/middlewares/authMiddleware.int.test.js",
     "<rootDir>/tests/integration/controllers/authController.int.test.js",    
     
+    "<rootDir>/models/productModel.test.js",
+    "<rootDir>/controllers/categoryController.int.test.js",
+    "<rootDir>/controllers/productController.int.test.js",
   ],
 
   // jest code coverage
