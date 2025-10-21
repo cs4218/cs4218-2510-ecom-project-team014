@@ -137,8 +137,8 @@ describe('brainTreePaymentController', () => {
     mockProductBulkWrite.mockReset();
 
     mockProductFind.mockResolvedValue([
-      { _id: { toString: () => 'prod1' }, name: 'Product 1', quantity: 10 },
-      { _id: { toString: () => 'prod2' }, name: 'Product 2', quantity: 5 }
+      { _id: { toString: () => 'prod1' }, name: 'Product 1', quantity: 10, price: 100 },
+      { _id: { toString: () => 'prod2' }, name: 'Product 2', quantity: 5, price: 50 }
     ]);
   });
 
@@ -154,18 +154,24 @@ describe('brainTreePaymentController', () => {
       expect(options.amount).toBe(250); // 100*2 + 50*1
       expect(options.paymentMethodNonce).toBe('payment_nonce_123');
       expect(options.options.submitForSettlement).toBe(true);
-      callback(null, mockResult);
+      // Call callback asynchronously to simulate Braintree
+      setImmediate(() => callback(null, mockResult));
     });
 
     await brainTreePaymentController(req, res);
 
+    // Wait for async callback to complete
+    await new Promise(resolve => setImmediate(resolve));
+
     expect(mockProductFind).toHaveBeenCalledWith({ _id: { $in: ['prod1', 'prod2'] } });
     expect(mockTransactionSale).toHaveBeenCalledTimes(1);
     expect(mockOrderSave).toHaveBeenCalledTimes(1);
-    expect(mockProductBulkWrite).toHaveBeenCalledWith([
-      { updateOne: { filter: { _id: 'prod1' }, update: { $inc: { quantity: -2 } } } },
-      { updateOne: { filter: { _id: 'prod2' }, update: { $inc: { quantity: -1 } } } }
-    ]);
+    // BulkWrite now receives ObjectIds, not strings
+    expect(mockProductBulkWrite).toHaveBeenCalled();
+    const bulkWriteCall = mockProductBulkWrite.mock.calls[0][0];
+    expect(bulkWriteCall).toHaveLength(2);
+    expect(bulkWriteCall[0].updateOne.update).toEqual({ $inc: { quantity: -2 } });
+    expect(bulkWriteCall[1].updateOne.update).toEqual({ $inc: { quantity: -1 } });
     expect(res.json).toHaveBeenCalledWith({ ok: true });
   });
 
@@ -190,7 +196,7 @@ describe('brainTreePaymentController', () => {
 
     expect(mockTransactionSale).not.toHaveBeenCalled();
     expect(mockOrderSave).not.toHaveBeenCalled();
-    expect(res.status).toHaveBeenCalledWith(500)
+    expect(res.status).toHaveBeenCalledWith(400)
     expect(res.send).toHaveBeenCalledWith({ok: false, message: "No items in cart."})
   });
 
@@ -224,24 +230,31 @@ describe('brainTreePaymentController', () => {
 
     expect(mockTransactionSale).not.toHaveBeenCalled();
     expect(mockOrderSave).not.toHaveBeenCalled();
-    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.status).toHaveBeenCalledWith(400);
     expect(res.send).toHaveBeenCalledWith({ok: false, message: "No items in cart."});
   });
 
   it('should handle cart with invalid price structure', async () => {
     req.body.cart = [
-      { _id: 'prod1', name: 'Product 1' }, // missing price
-      { _id: 'prod2', name: 'Product 2', price: 'not-a-number' }, // NaN price
-      { _id: 'prod3', name: 'Product 3', price: 50 } // valid
+      { _id: 'prod1', name: 'Product 1', price: 100 },
+      { _id: 'prod2', name: 'Product 2', price: 50 },
+      { _id: 'prod3', name: 'Product 3', price: 50 }
     ];
+
+    // Mock DB products with invalid price (NaN)
+    mockProductFind.mockResolvedValue([
+      { _id: { toString: () => 'prod1' }, name: 'Product 1', quantity: 10, price: NaN },
+      { _id: { toString: () => 'prod2' }, name: 'Product 2', quantity: 5, price: 50 },
+      { _id: { toString: () => 'prod3' }, name: 'Product 3', quantity: 5, price: 50 }
+    ]);
 
     await brainTreePaymentController(req, res);
 
     expect(mockTransactionSale).not.toHaveBeenCalled();
     expect(mockOrderSave).not.toHaveBeenCalled();
-    expect(mockProductFind).not.toHaveBeenCalled(); // doesn't even get to product validation
+    expect(mockProductFind).toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.send).toHaveBeenCalledWith({ok: false, message: "Invalid price for item"});
+    expect(res.send).toHaveBeenCalledWith({ok: false, message: "Invalid price for product Product 1"});
   });
 
   it('should calculate total correctly for multiple items', async () => {
@@ -252,25 +265,28 @@ describe('brainTreePaymentController', () => {
     ];
 
     mockProductFind.mockResolvedValue([
-      { _id: { toString: () => 'item1' }, name: 'Item 1', quantity: 10 },
-      { _id: { toString: () => 'item2' }, name: 'Item 2', quantity: 10 },
-      { _id: { toString: () => 'item3' }, name: 'Item 3', quantity: 10 }
+      { _id: { toString: () => 'item1' }, name: 'Item 1', quantity: 10, price: 25.50 },
+      { _id: { toString: () => 'item2' }, name: 'Item 2', quantity: 10, price: 30.25 },
+      { _id: { toString: () => 'item3' }, name: 'Item 3', quantity: 10, price: 44.25 }
     ]);
 
     const mockResult = { success: true };
     mockTransactionSale.mockImplementation((options, callback) => {
       expect(options.amount).toBe(100);
-      callback(null, mockResult);
+      setImmediate(() => callback(null, mockResult));
     });
 
     await brainTreePaymentController(req, res);
+
+    // Wait for async callback to complete
+    await new Promise(resolve => setImmediate(resolve));
 
     expect(res.json).toHaveBeenCalledWith({ ok: true });
   });
 
   it('should return 404 when product not found in database', async () => {
     mockProductFind.mockResolvedValue([
-      { _id: { toString: () => 'prod1' }, name: 'Product 1', quantity: 10 }
+      { _id: { toString: () => 'prod1' }, name: 'Product 1', quantity: 10, price: 100 }
     ]);
 
     await brainTreePaymentController(req, res);
@@ -286,8 +302,8 @@ describe('brainTreePaymentController', () => {
 
   it('should return 400 when insufficient stock', async () => {
     mockProductFind.mockResolvedValue([
-      { _id: { toString: () => 'prod1' }, name: 'Product 1', quantity: 1 },
-      { _id: { toString: () => 'prod2' }, name: 'Product 2', quantity: 5 }
+      { _id: { toString: () => 'prod1' }, name: 'Product 1', quantity: 1, price: 100 },
+      { _id: { toString: () => 'prod2' }, name: 'Product 2', quantity: 5, price: 50 }
     ]);
 
     await brainTreePaymentController(req, res);
