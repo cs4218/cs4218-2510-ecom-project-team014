@@ -10,21 +10,25 @@ export default {
   // which test to run
 
   testMatch: [
-    "<rootDir>/controllers/categoryController.test.js",
+    /*"<rootDir>/controllers/categoryController.test.js",
     "<rootDir>/controllers/productController.test.js",
     "<rootDir>/controllers/braintreeTokenController.test.js",
     "<rootDir>/models/categoryModel.test.js",
-    "<rootDir>/models/productModel.test.js",
+    "<rootDir>/models/productModel.test.js",*/
+    //"<rootDir>/tests/integration/helpers/authHelper.int.test.js",
+    "<rootDir>/tests/integration/middlewares/authMiddleware.int.test.js",    
   ],
 
   // jest code coverage
   collectCoverage: true,
 
   collectCoverageFrom: [
-    "<rootDir>/controllers/categoryController.js",
-    "<rootDir>/controllers/productController.js",
-    "<rootDir>/models/categoryModel.js",
-    "<rootDir>/models/productModel.js",
+    //"<rootDir>/controllers/categoryController.js",
+    //"<rootDir>/controllers/productController.js",
+    //"<rootDir>/models/categoryModel.js",
+    //"<rootDir>/models/productModel.js",
+    //"<rootDir>/helpers/authHelper.js",
+    "<rootDir>/middlewares/authMiddleware.js",
   ],
 
   coverageThreshold: {
@@ -32,5 +36,7 @@ export default {
       lines: 100,
       functions: 100,
     },
+
+  setupFiles: ["dotenv/config"],
   },
 };

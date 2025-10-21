@@ -26,3 +26,5 @@ describe('authHelper integration', () => {
     expect(isMatch).toBe(false);
   });
 });
+
+// Above tests are generated with the help of AI
