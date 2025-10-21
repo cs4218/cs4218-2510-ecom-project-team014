@@ -143,7 +143,7 @@ export const populateData = async (mongoUri = null) => {
     const insertedOrders = await orderModel.insertMany(processedOrders, { ordered: false, rawResult: false });
     console.log(`✓ Inserted ${insertedOrders.length} orders`);
 
-    console.log("\n✅ Database population completed successfully!");
+    console.log("\n Database population completed successfully!");
     console.log(`
 Summary:
 - Categories: ${insertedCategories.length}

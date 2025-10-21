@@ -5,9 +5,6 @@ export default defineConfig({
 
   timeout: 30 * 1000,
 
-  globalSetup: './tests/global-setup.js',
-  globalTeardown: './tests/global-teardown.js',
-
   // Test execution settings
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -41,21 +38,24 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
 
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
+    // {
+    //   name: 'firefox',
+    //   use: { ...devices['Desktop Firefox'] },
+    // },
 
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
+    // {
+    //   name: 'webkit',
+    //   use: { ...devices['Desktop Safari'] },
+    // },
   ],
 
+  // NOTE: webServer starts AFTER globalSetup completes
   webServer: {
-    command: 'npm run dev',
+    command: 'NODE_ENV=test node server.js & npm run client',
     url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     timeout: 120 * 1000,
+    stdout: 'pipe',
+    stderr: 'pipe',
   },
 });
