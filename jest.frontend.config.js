@@ -26,6 +26,11 @@ export default {
     "<rootDir>/client/src/pages/ProductDetails.test.js",
     "<rootDir>/client/src/pages/CategoryProduct.test.js",
     "<rootDir>/client/src/pages/admin/Users.test.js",
+    "<rootDir>/client/src/pages/admin/CreateCategory.int.test.js",
+    "<rootDir>/client/src/pages/admin/CreateProduct.int.test.js",
+    "<rootDir>/client/src/pages/admin/products.int.test.js",
+    "<rootDir>/client/src/pages/admin/UpdateProduct.int.test.js",
+    "<rootDir>/client/src/pages/admin/AdminOrders.int.test.js"
   ],
 
   // jest code coverage

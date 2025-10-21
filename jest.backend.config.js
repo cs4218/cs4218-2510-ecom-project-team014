@@ -15,6 +15,8 @@ export default {
     "<rootDir>/controllers/braintreeTokenController.test.js",
     "<rootDir>/models/categoryModel.test.js",
     "<rootDir>/models/productModel.test.js",
+    "<rootDir>/controllers/categoryController.int.test.js",
+    "<rootDir>/controllers/productController.int.test.js",
   ],
 
   // jest code coverage

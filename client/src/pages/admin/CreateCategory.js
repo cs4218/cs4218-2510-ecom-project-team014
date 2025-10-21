@@ -31,17 +31,30 @@ const CreateCategory = () => {
   };
 
   //get all cat
+  // const getAllCategory = async () => {
+  //   try {
+  //     const { data } = await axios.get("/api/v1/category/get-category");
+  //     if (data.success) {
+  //       setCategories(data.category);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error("Something wwent wrong in getting catgeory");
+  //   }
+  // };
+
   const getAllCategory = async () => {
-    try {
-      const { data } = await axios.get("/api/v1/category/get-category");
-      if (data.success) {
-        setCategories(data.category);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Something wwent wrong in getting catgeory");
+  try {
+    const response = await axios.get("/api/v1/category/get-category");
+    const data = response?.data; // safely access data
+    if (data?.success) {
+      setCategories(data.category);
     }
-  };
+  } catch (error) {
+    console.log(error);
+    toast.error("Something went wrong in getting category");
+  }
+};
 
   useEffect(() => {
     getAllCategory();
@@ -99,6 +112,8 @@ const CreateCategory = () => {
                 handleSubmit={handleSubmit}
                 value={name}
                 setValue={setName}
+                testIdPrefix="create"
+
               />
             </div>
             <div className="w-75">
@@ -143,12 +158,14 @@ const CreateCategory = () => {
             <Modal
               onCancel={() => setVisible(false)}
               footer={null}
-              visible={visible}
+              //visible={visible}
+              open={visible}
             >
               <CategoryForm
                 value={updatedName}
                 setValue={setUpdatedName}
                 handleSubmit={handleUpdate}
+                testIdPrefix="update"
               />
             </Modal>
           </div>
