@@ -21,20 +21,21 @@ export default {
 
   // only run these tests
   testMatch: [
-    "<rootDir>/client/src/tests/*.test.js"
+    "<rootDir>/client/src/**/*.test.js",
+    "<rootDir>/client/src/**/*.int.test.js",
   ],
 
   // jest code coverage
   collectCoverage: true,
+  coverageDirectory: "<rootDir>/coverage/frontend",
   collectCoverageFrom: [
-    "<rootDir>/client/src/pages/About.js",
-    "<rootDir>/client/src/pages/user/Profile.js",
-    "<rootDir>/client/src/pages/user/Orders.js",
-    "<rootDir>/client/src/pages/Pagenotfound.js",
-    "<rootDir>/client/src/components/Layout.js",
-    "<rootDir>/client/src/components/Spinner.js",
-    "<rootDir>/client/src/components/Footer.js",
-    "<rootDir>/client/src/components/Header.js"
+    "<rootDir>/client/src/**/*.js",
+    "!<rootDir>/client/src/**/*.test.js",
+    "!<rootDir>/client/src/**/*.int.test.js",
+    "!<rootDir>/client/src/index.js",
+    "!<rootDir>/client/src/reportWebVitals.js",
+    "!<rootDir>/client/src/setupTests.js",
+    "!<rootDir>/client/src/_site/**",
   ],
   // "client/src/hooks/**"
   coverageThreshold: {
