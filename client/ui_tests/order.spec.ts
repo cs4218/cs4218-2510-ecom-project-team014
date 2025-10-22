@@ -56,6 +56,7 @@ test.describe('Orders UI Tests', () => {
   });
 
   test('layout header and footer are present', async ({ page }) => {
+    await page.waitForURL('http://localhost:3000/dashboard/user/orders');
     expect(
       await page.locator('header, nav, [data-testid="header"]').count()
     ).toBeGreaterThan(0);
