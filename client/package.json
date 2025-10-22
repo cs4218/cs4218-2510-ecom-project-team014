@@ -49,12 +49,18 @@
   },
   "jest": {
     "collectCoverage": true,
-    "collectCoverageFrom": ["client/src/pages/Auth/**"],
+    "collectCoverageFrom": [
+      "client/src/pages/Auth/**"
+    ],
     "coverageThreshold": {
       "global": {
         "lines": 100,
         "functions": 100
       }
     }
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^24.9.1"
   }
 }
