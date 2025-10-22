@@ -34,14 +34,14 @@ jest.mock("../../hooks/useCategory", ()=> jest.fn(()=>[]));
     writable: true,
   });
 
-window.matchMedia = window.matchMedia || function() {
-    return {
-      matches: false,
-      addListener: function() {},
-      removeListener: function() {}
-    };
+window.matchMedia = window.matchMedia || function () {
+  return {
+    matches: false,
+    addListener: function () { },
+    removeListener: function () { }
   };
-      
+};
+
 
 describe('Register Component', () => {
   beforeEach(() => {
@@ -53,12 +53,12 @@ describe('Register Component', () => {
     axios.post.mockResolvedValueOnce({ data: { success: true } });
 
     const { getByText, getByPlaceholderText } = render(
-        <MemoryRouter initialEntries={['/register']}>
-          <Routes>
-            <Route path="/register" element={<Register />} />
-          </Routes>
-        </MemoryRouter>
-      );
+      <MemoryRouter initialEntries={['/register']}>
+        <Routes>
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </MemoryRouter>
+    );
 
     fireEvent.change(getByPlaceholderText('Enter Your Name'), { target: { value: 'John Doe' } });
     fireEvent.change(getByPlaceholderText('Enter Your Email'), { target: { value: 'test@example.com' } });
@@ -80,12 +80,12 @@ describe('Register Component', () => {
     axios.post.mockRejectedValueOnce({ message: 'Error in registration' });
 
     const { getByText, getByPlaceholderText } = render(
-        <MemoryRouter initialEntries={['/register']}>
-          <Routes>
-            <Route path="/register" element={<Register />} />
-          </Routes>
-        </MemoryRouter>
-      );
+      <MemoryRouter initialEntries={['/register']}>
+        <Routes>
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </MemoryRouter>
+    );
 
     fireEvent.change(getByPlaceholderText('Enter Your Name'), { target: { value: 'John Doe' } });
     fireEvent.change(getByPlaceholderText('Enter Your Email'), { target: { value: 'test@example.com' } });

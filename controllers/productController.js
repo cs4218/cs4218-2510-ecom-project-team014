@@ -40,7 +40,7 @@ export const createProductController = async (req, res) => {
           .send({ error: "photo is Required and should be less then 1mb" });
     }
 
-    const products = new productModel({ ...req.fields, slug: slugify(name) });
+    const products = new productModel({ ...req.fields, name: String(name), description: String(description), price: Number(price), category: String(category), quantity: Number(quantity),slug: slugify(name) });
     if (photo) {
       products.photo.data = fs.readFileSync(photo.path);
       products.photo.contentType = photo.type;
@@ -73,14 +73,14 @@ export const getProductController = async (req, res) => {
     res.status(200).send({
       success: true,
       counTotal: products.length,
-      message: "ALlProducts ",
+      message: "AllProducts ",
       products,
     });
   } catch (error) {
     console.log(error);
     res.status(500).send({
       success: false,
-      message: "Erorr in getting products",
+      message: "Error in getting products",
       error: error.message,
     });
   }
@@ -101,26 +101,39 @@ export const getSingleProductController = async (req, res) => {
     console.log(error);
     res.status(500).send({
       success: false,
-      message: "Eror while getitng single product",
+      message: "Error while getitng single product",
       error,
     });
   }
 };
 
-// get photo
 export const productPhotoController = async (req, res) => {
   try {
-    const product = await productModel.findById(req.params.pid).select("photo");
-    if (product.photo.data) {
-      res.set("Content-type", product.photo.contentType);
-      return res.status(200).send(product.photo.data);
+    const { pid } = req.params;
+    if (!pid) {
+      return res
+        .status(400)
+        .send({ success: false, message: "Missing product id (pid)" });
     }
+
+    const product = await productModel.findById(pid).select("photo");
+    if (!product || !product.photo || !product.photo.data) {
+      return res
+        .status(404)
+        .send({ success: false, message: "Photo not found for product" });
+    }
+
+    res.set(
+      "Content-Type",
+      product.photo.contentType || "application/octet-stream"
+    );
+    return res.status(200).send(product.photo.data);
   } catch (error) {
     console.log(error);
-    res.status(500).send({
+    return res.status(500).send({
       success: false,
-      message: "Erorr while getting photo",
-      error,
+      message: "Error while getting photo",
+      error: error?.message ?? String(error),
     });
   }
 };
@@ -195,18 +208,18 @@ export const updateProductController = async (req, res) => {
 // filters
 export const productFiltersController = async (req, res) => {
   try {
-    const { checked, radio } = req.body;
+    // only this line is new to handle undefined filter input
+    const { checked = [], radio = [] } = req.body || {};
+
     let args = {};
-    if (checked.length > 0) args.category = checked;
+    if (checked.length > 0) args.category = checked; // keep original semantics
     if (radio.length) args.price = { $gte: radio[0], $lte: radio[1] };
+
     const products = await productModel.find(args);
-    res.status(200).send({
-      success: true,
-      products,
-    });
+    return res.status(200).send({ success: true, products });
   } catch (error) {
     console.log(error);
-    res.status(400).send({
+    return res.status(400).send({
       success: false,
       message: "Error WHile Filtering Products",
       error,
@@ -217,7 +230,7 @@ export const productFiltersController = async (req, res) => {
 // product count
 export const productCountController = async (req, res) => {
   try {
-    const total = await productModel.find({}).estimatedDocumentCount();
+    const total = await productModel.estimatedDocumentCount();
     res.status(200).send({
       success: true,
       total,
@@ -232,24 +245,25 @@ export const productCountController = async (req, res) => {
   }
 };
 
-// product list base on page
+// productListController (hardened minimally)
 export const productListController = async (req, res) => {
   try {
     const perPage = 6;
-    const page = req.params.page ? req.params.page : 1;
+    const raw = req.params?.page;
+    let page = Number.parseInt(raw, 10);
+    if (!Number.isFinite(page) || page < 1) page = 1;
+
     const products = await productModel
       .find({})
       .select("-photo")
-      .skip((page - 1) * perPage)
+      .skip((page - 1) * perPage) // now always 0, 6, 12, ...
       .limit(perPage)
       .sort({ createdAt: -1 });
-    res.status(200).send({
-      success: true,
-      products,
-    });
+
+    return res.status(200).send({ success: true, products });
   } catch (error) {
     console.log(error);
-    res.status(400).send({
+    return res.status(400).send({
       success: false,
       message: "error in per page ctrl",
       error,
@@ -262,7 +276,7 @@ export const searchProductController = async (req, res) => {
   try {
     const { keyword } = req.params;
     if (!keyword || !keyword.trim()) {
-      return res.json([])
+      return res.json([]);
     }
     const trimmedKeyword = keyword.trim();
     const resutls = await productModel
@@ -355,12 +369,12 @@ export const brainTreePaymentController = async (req, res) => {
     }
 
     // Batch query to fetch all products from DB at once
-    const productIds = cart.map(item => item._id);
+    const productIds = cart.map((item) => item._id);
     const products = await productModel.find({ _id: { $in: productIds } });
 
     // Create a map for quick lookups
     const productMap = new Map();
-    products.forEach(product => {
+    products.forEach((product) => {
       productMap.set(product._id.toString(), product);
     });
 
@@ -374,8 +388,8 @@ export const brainTreePaymentController = async (req, res) => {
       if (!product) {
         return res.status(404).send({
           ok: false,
-          message: `Product with ID ${item._id} not found`
-        })
+          message: `Product with ID ${item._id} not found`,
+        });
       }
 
       // Validate price from database (security fix)
@@ -395,11 +409,11 @@ export const brainTreePaymentController = async (req, res) => {
 
       // Check if requested quantity is available
       const requestedQuantity = item.quantity || 1;
-      if (!product.quantity || (product.quantity < requestedQuantity)) {
+      if (!product.quantity || product.quantity < requestedQuantity) {
         return res.status(400).send({
           ok: false,
-          message: `Insufficient stock for ${product.name}. Available: ${product.quantity}, Requested: ${requestedQuantity}`
-        })
+          message: `Insufficient stock for ${product.name}. Available: ${product.quantity}, Requested: ${requestedQuantity}`,
+        });
       }
 
       // CRITICAL FIX: use the price from DB, not the client-provided cart

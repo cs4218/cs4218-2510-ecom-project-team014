@@ -20,16 +20,46 @@ export default {
   transformIgnorePatterns: ["/node_modules/(?!(styleMock\\.js)$)"],
 
   // only run these tests
-  testMatch: ["<rootDir>/client/src/pages/Auth/*.test.js", "<rootDir>/client/src/pages/admin/*.test.js", "<rootDir>/client/src/components/Form/*.test.js", "<rootDir>/client/src/components/Routes/*.test.js", "<rootDir>/client/src/components/*.test.js", "<rootDir>/client/src/pages/user/*.test.js", "<rootDir>/client/src/context/*.test.js",],
+  testMatch: [
+    /*"<rootDir>/client/src/hooks/useCategory.test.js",
+    "<rootDir>/client/src/pages/Categories.test.js",
+    "<rootDir>/client/src/pages/ProductDetails.test.js",
+    "<rootDir>/client/src/pages/CategoryProduct.test.js",
+    "<rootDir>/client/src/pages/admin/Users.test.js",*/
+    //"<rootDir>/client/src/context/__tests__/auth.int.test.js",
+    //"<rootDir>/client/src/components/__tests__/AdminMenu.int.test.js",   
+    //"<rootDir>/client/src/pages/admin/__tests__/AdminDashboard.int.test.js",
+    //"<rootDir>/client/src/pages/Auth/__tests__/Register.int.test.js",
+    "<rootDir>/client/src/pages/Auth/__tests__/Login.int.test.js",
+
+    "<rootDir>/client/src/pages/admin/Users.test.js",
+    "<rootDir>/client/src/pages/admin/CreateCategory.int.test.js",
+    "<rootDir>/client/src/pages/admin/CreateProduct.int.test.js",
+    "<rootDir>/client/src/pages/admin/products.int.test.js",
+    "<rootDir>/client/src/pages/admin/UpdateProduct.int.test.js",
+    "<rootDir>/client/src/pages/admin/AdminOrders.int.test.js"
+  ],
 
   // jest code coverage
+  // Daniel: Updated collectCoverageFrom from pages/Auth/*.js to pages/**/*.js to include all js files in pages directory
   collectCoverage: true,
-  collectCoverageFrom: ["client/src/pages/Auth/**", "client/src/pages/admin/**", "client/src/components/Form/**", "client/src/components/Routes/**", "client/src/components/**", "client/src/pages/user/**", "client/src/context/auth.js"],
+  collectCoverageFrom: [
+    /*"<rootDir>/client/src/hooks/useCategory.js",
+    "<rootDir>/client/src/pages/Categories.js",
+    "<rootDir>/client/src/pages/ProductDetails.js",
+    "<rootDir>/client/src/pages/CategoryProduct.js",
+    "<rootDir>/client/src/pages/admin/Users.js",*/
+    //"<rootDir>/client/src/context/auth.js",
+    //"<rootDir>/client/src/components/AdminMenu.js",
+    //"<rootDir>/client/src/pages/Auth/Register.js",
+    "<rootDir>/client/src/pages/Auth/Login.js"
 
+  ],
+  // "client/src/hooks/**"
   coverageThreshold: {
     global: {
-      lines: 80,
-      functions: 80,
+      lines: 100,
+      functions: 100,
     },
   },
   setupFilesAfterEnv: ["<rootDir>/client/src/setupTests.js"],

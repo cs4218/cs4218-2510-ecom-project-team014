@@ -1,5 +1,5 @@
-import express from "express";
-import colors from "colors";
+// server.js
+import app from "./app.js";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import connectDB from "./config/db.js";
@@ -10,8 +10,8 @@ import cors from "cors";
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { populateData } from './sample_data/populate_db.js';
 import fs from 'fs';
+import colors from "colors"; // if needed
 
-// configure env
 dotenv.config();
 
 if (process.env.NODE_ENV === 'test') {
