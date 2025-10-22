@@ -9,15 +9,6 @@
     "server": "nodemon server.js",
     "client": "npm start --prefix ./client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "sonarqube": "sonar-scanner",
-    "test": "npm run test:backend && npm run test:frontend",
-    "test:frontend": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.frontend.config.js",
-    "test:backend": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.backend.config.js",
-    "test:ui": "playwright test",
-    "test:ui_gui": "playwright test --ui",
-    "test:ui_debug": "PWDEBUG=1 playwright test",
-    "pw:install": "playwright install",
-    "ui:report": "playwright show-report"
     "sonarqube": "npx sonarqube-scanner",
     "test": "npm run test:backend && npm run test:frontend && npm run test:merge-coverage",
     "test:frontend": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.frontend.config.js",
@@ -32,7 +23,9 @@
     "test:ui:webkit": "playwright test --project=webkit",
     "test:all": "npm run test:backend && npm run test:frontend && npm run test:ui",
     "playwright:report": "playwright show-report playwright-report",
-    "playwright:codegen": "playwright codegen http://localhost:3000"
+    "playwright:codegen": "playwright codegen http://localhost:3000",
+    "pw:install": "playwright install",
+    "ui:report": "playwright show-report"
   },
   "keywords": [],
   "author": "RP",
@@ -66,9 +59,8 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
-    "sonarqube-scanner": "^4.3.2"
-    "mongodb-memory-server": "^10.2.3",
     "sonarqube-scanner": "^4.3.2",
+    "mongodb-memory-server": "^10.2.3",
     "supertest": "^7.1.4"
   }
 }
