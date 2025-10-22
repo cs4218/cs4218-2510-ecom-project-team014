@@ -21,39 +21,21 @@ export default {
 
   // only run these tests
   testMatch: [
-    /*"<rootDir>/client/src/hooks/useCategory.test.js",
-    "<rootDir>/client/src/pages/Categories.test.js",
-    "<rootDir>/client/src/pages/ProductDetails.test.js",
-    "<rootDir>/client/src/pages/CategoryProduct.test.js",
-    "<rootDir>/client/src/pages/admin/Users.test.js",*/
-    //"<rootDir>/client/src/context/__tests__/auth.int.test.js",
-    //"<rootDir>/client/src/components/__tests__/AdminMenu.int.test.js",   
-    //"<rootDir>/client/src/pages/admin/__tests__/AdminDashboard.int.test.js",
-    //"<rootDir>/client/src/pages/Auth/__tests__/Register.int.test.js",
-    "<rootDir>/client/src/pages/Auth/__tests__/Login.int.test.js",
-
-    "<rootDir>/client/src/pages/admin/Users.test.js",
-    "<rootDir>/client/src/pages/admin/CreateCategory.int.test.js",
-    "<rootDir>/client/src/pages/admin/CreateProduct.int.test.js",
-    "<rootDir>/client/src/pages/admin/products.int.test.js",
-    "<rootDir>/client/src/pages/admin/UpdateProduct.int.test.js",
-    "<rootDir>/client/src/pages/admin/AdminOrders.int.test.js"
+    "<rootDir>/client/src/**/*.test.js",
+    "<rootDir>/client/src/**/*.int.test.js",
   ],
 
   // jest code coverage
   // Daniel: Updated collectCoverageFrom from pages/Auth/*.js to pages/**/*.js to include all js files in pages directory
   collectCoverage: true,
   collectCoverageFrom: [
-    /*"<rootDir>/client/src/hooks/useCategory.js",
-    "<rootDir>/client/src/pages/Categories.js",
-    "<rootDir>/client/src/pages/ProductDetails.js",
-    "<rootDir>/client/src/pages/CategoryProduct.js",
-    "<rootDir>/client/src/pages/admin/Users.js",*/
-    //"<rootDir>/client/src/context/auth.js",
-    //"<rootDir>/client/src/components/AdminMenu.js",
-    //"<rootDir>/client/src/pages/Auth/Register.js",
-    "<rootDir>/client/src/pages/Auth/Login.js"
-
+    "<rootDir>/client/src/**/*.js",
+    "!<rootDir>/client/src/**/*.test.js",
+    "!<rootDir>/client/src/**/*.int.test.js",
+    "!<rootDir>/client/src/index.js",
+    "!<rootDir>/client/src/reportWebVitals.js",
+    "!<rootDir>/client/src/setupTests.js",
+    "!<rootDir>/client/src/_site/**",
   ],
   // "client/src/hooks/**"
   coverageThreshold: {
