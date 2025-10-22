@@ -46,21 +46,21 @@ describe("Layout integration tests", () => {
 
     expect(screen.getByText("IntegrationChild")).toBeInTheDocument();
 
-    // check for header
+    //check header
     expect(
       document.querySelector("header") ||
         document.querySelector("[data-testid='header']") ||
         document.querySelector("nav")
     ).toBeTruthy();
 
-    // check for footer
+    //check footer
     expect(
       document.querySelector("footer") ||
         document.querySelector("[data-testid='footer']") ||
         document.querySelector(".footer")
     ).toBeTruthy();
 
-    
+    //check metadata
     await waitFor(() => {
       const titleEl = document.querySelector("title");
       const titleText = titleEl ? titleEl.textContent : document.title;
@@ -77,7 +77,7 @@ describe("Layout integration tests", () => {
   });
 
 
-  it("uses defaults when props omitted", async () => {
+  it("uses defaults with no props passed through", async () => {
     render(
       <MemoryRouter>
         <Layout>
@@ -88,8 +88,6 @@ describe("Layout integration tests", () => {
 
     expect(screen.getByText("DefaultChild")).toBeInTheDocument();
 
-
-   
     await waitFor(() => {
       //default title
       expect(document.title).toBe("Ecommerce app - shop now");

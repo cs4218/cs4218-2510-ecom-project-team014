@@ -21,11 +21,10 @@ export default {
 
   // only run these tests
   testMatch: [
-    "<rootDir>/client/src/integration_tests/*.test.js"
+    "<rootDir>/client/src/tests/*.test.js"
   ],
 
   // jest code coverage
-  // Daniel: Updated collectCoverageFrom from pages/Auth/*.js to pages/**/*.js to include all js files in pages directory
   collectCoverage: true,
   collectCoverageFrom: [
     "<rootDir>/client/src/pages/About.js",
@@ -33,7 +32,9 @@ export default {
     "<rootDir>/client/src/pages/user/Orders.js",
     "<rootDir>/client/src/pages/Pagenotfound.js",
     "<rootDir>/client/src/components/Layout.js",
-    "<rootDir>/client/src/components/Spinner.js"
+    "<rootDir>/client/src/components/Spinner.js",
+    "<rootDir>/client/src/components/Footer.js",
+    "<rootDir>/client/src/components/Header.js"
   ],
   // "client/src/hooks/**"
   coverageThreshold: {

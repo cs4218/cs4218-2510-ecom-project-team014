@@ -2,7 +2,6 @@ jest.mock('react-helmet', () => ({
   Helmet: ({ children }) => require('react').createElement(require('react').Fragment, null, children),
 }));
 
-// Mock Layout to a simple wrapper component
 jest.mock('../components/Layout', () => {
   const React = require('react');
   return {
@@ -11,7 +10,6 @@ jest.mock('../components/Layout', () => {
   };
 });
 
-// Mock the UserMenu used inside Profile so it returns a valid React node
 jest.mock('../components/UserMenu', () => {
   const React = require('react');
   return {
@@ -20,8 +18,6 @@ jest.mock('../components/UserMenu', () => {
   };
 });
 
-// other mocks (toast/axios/auth) should remain before requires
-// create toast spy functions so tests can assert calls
 const mockSuccess = jest.fn();
 const mockError = jest.fn();
 jest.mock('react-hot-toast', () => {
@@ -38,7 +34,6 @@ jest.mock('react-hot-toast', () => {
 jest.mock('axios');
 jest.mock('../context/auth', () => ({ useAuth: jest.fn(() => [{ user: null, token: null }, jest.fn()]) }));
 
-// Testing helpers and requires after mocks
 const React = require('react');
 const { render, screen, fireEvent, waitFor } = require('@testing-library/react');
 const { MemoryRouter } = require('react-router-dom');
@@ -55,7 +50,7 @@ describe('Profile integration tests', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-
+    //set user
     user = { name: 'daniel', email: 'daniel@gmail.com', phone: '99991111', address: '12 Kent Ridge' };
     token = 'tok';
     setAuth = jest.fn();
@@ -70,7 +65,7 @@ describe('Profile integration tests', () => {
     jest.restoreAllMocks();
   });
 
-  it('submits, updates auth + shows success toast (includes password/phone/address)', async () => {
+  it('update user info', async () => {
     const updatedUser = { ...user, name: 'DZhang', phone: '111222', address: 'New Addr' };
     axios.put.mockResolvedValueOnce({ data: { updatedUser } });
 
@@ -78,7 +73,6 @@ describe('Profile integration tests', () => {
       React.createElement(MemoryRouter, null, React.createElement(Layout, null, React.createElement(Profile, { emailDisabled: false })))
     );
 
-    // initial values from auth context
     const nameInput = screen.getByPlaceholderText('Enter Your Name');
     const emailInput = screen.getByPlaceholderText('Enter Your Email');
     const passwordInput = screen.getByPlaceholderText('Enter Your Password');
@@ -88,7 +82,7 @@ describe('Profile integration tests', () => {
     expect(nameInput.value).toBe(user.name);
     expect(emailInput.value).toBe(user.email);
 
-    // update fields including password/phone/address
+    //update information
     fireEvent.change(nameInput, { target: { value: 'DZhang' } });
     fireEvent.change(emailInput, { target: { value: 'dzhang@gmail.com' } });
     fireEvent.change(passwordInput, { target: { value: 'newpass' } });
@@ -100,7 +94,7 @@ describe('Profile integration tests', () => {
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
 
-    // verify axios payload contains the fields we set
+    //verify payload
     await waitFor(() =>
       expect(axios.put).toHaveBeenCalledWith(
         '/api/v1/auth/profile',
@@ -114,7 +108,6 @@ describe('Profile integration tests', () => {
       )
     );
 
-    // toast and auth updates
     await waitFor(() => expect(mockSuccess).toHaveBeenCalledWith('Profile Updated Successfully'));
     expect(setAuth).toHaveBeenCalled();
     const calledWith = setAuth.mock.calls[0][0];
@@ -122,15 +115,14 @@ describe('Profile integration tests', () => {
     expect(localStorage.setItem).toHaveBeenCalled();
   });
 
-  it('initializes inputs to empty when auth.user is missing', async () => {
-    // simulate no user in auth
+  it('empty values with missing user auth', async () => {
     const setAuthMock = jest.fn();
     jest.spyOn(authHook, 'useAuth').mockReturnValue([{ user: null, token: null }, setAuthMock]);
 
     render(
     React.createElement(MemoryRouter, null, React.createElement(Layout, null, React.createElement(Profile, { emailDisabled: false })))
     );
-    // inputs should be empty strings as per default destructure in useEffect
+    
     expect(screen.getByPlaceholderText('Enter Your Name').value).toBe('');
     expect(screen.getByPlaceholderText('Enter Your Email').value).toBe('');
     expect(screen.getByPlaceholderText('Enter Your Phone').value).toBe('');
@@ -145,7 +137,6 @@ describe('Profile integration tests', () => {
       React.createElement(MemoryRouter, null, React.createElement(Layout, null, React.createElement(Profile, { emailDisabled: false })))
     );
 
-    // submit without changes
     const btn = screen.getByText('UPDATE');
     fireEvent.click(btn);
 
@@ -167,7 +158,7 @@ describe('Profile integration tests', () => {
     await waitFor(() => expect(mockError).toHaveBeenCalledWith('API Error'));
   });
 
-  it('renders with emailDisabled=true, input disabled', async () => {
+  it('renders with emailDisabled=true, input disabled (default)', async () => {
     render(
       React.createElement(MemoryRouter, null, React.createElement(Layout, null, React.createElement(Profile, { emailDisabled: true })))
     );

@@ -1,8 +1,3 @@
-/**
- * Integration test: Pagenotfound inside real Layout (Header/Footer)
- */
-
-
 jest.mock('react-hot-toast', () => {
   const React = require('react');
   return {
@@ -15,7 +10,6 @@ jest.mock('react-hot-toast', () => {
   };
 });
 
-// Provide simple implementations for providers/hooks used by Layout/Header
 jest.mock('../context/auth', () => ({
   useAuth: jest.fn(() => [{ user: null, token: null }, jest.fn()]),
 }));
@@ -38,19 +32,17 @@ const Layout = require('../components/Layout').default;
 const Pagenotfound = require('../pages/Pagenotfound').default;
 const authHook = require('../context/auth');
 
-describe('Pagenotfound integration with Layout', () => {
+describe('Pagenotfound integration tests', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     document.head.innerHTML = '';
     document.title = '';
-    // ensure minimal browser APIs used by some components
     if (!window.matchMedia) {
       window.matchMedia = () => ({ matches: false, addListener: () => {}, removeListener: () => {} });
     }
   });
 
   it('renders 404 page inside Layout and sets document title and link', async () => {
-    // default auth returned above (no user) is fine for this page
     jest.spyOn(authHook, 'useAuth').mockReturnValue([{ user: null, token: null }, jest.fn()]);
 
     render(
@@ -60,17 +52,17 @@ describe('Pagenotfound integration with Layout', () => {
         )
       )
     );
-
-    // Headings present
+    
+    //check title+heading
     expect(screen.getByText('404')).toBeInTheDocument();
     expect(screen.getByText(/Oops ! Page Not Found/i)).toBeInTheDocument();
 
-    // Go Back link -> href '/'
+    //check go back link
     const goBack = screen.getByText('Go Back');
     expect(goBack).toBeInTheDocument();
     expect(goBack.closest('a')).toHaveAttribute('href', '/');
 
-    // Layout should set the document title (wait for Helmet)
+    //ensure title set correctly
     await waitFor(() => {
       const titleEl = document.querySelector('title');
       const titleText = titleEl && String(titleEl.textContent).trim().length > 0
@@ -79,7 +71,7 @@ describe('Pagenotfound integration with Layout', () => {
       expect(titleText).toBe('go back- page not found');
     });
 
-    // Header and Footer rendered by Layout (accept either semantic tags or test-id)
+    //header and footer present
     expect(
       document.querySelector('header') ||
       document.querySelector('[data-testid="header"]') ||

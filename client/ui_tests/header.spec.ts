@@ -1,6 +1,6 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
 
-async function login(page, email: string, password: string) {
+async function login(page: Page, email: string, password: string) {
   await page.goto('http://localhost:3000/login');
   //clear session/local state first
   await page.context().clearCookies();

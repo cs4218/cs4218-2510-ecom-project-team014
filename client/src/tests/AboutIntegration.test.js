@@ -1,4 +1,3 @@
-//stub a title and meta description for simplicity
 jest.mock('react-helmet', () => {
 	return {
 		Helmet: ({ children }) => {
@@ -33,7 +32,6 @@ jest.mock('../context/search', () => ({
 	useSearch: jest.fn(() => [{ query: '' }, jest.fn()]),
 }));
 
-// mock toast to avoid portal/timer side-effects
 jest.mock('react-hot-toast', () => {
 	const React = require('react');
 	return { Toaster: () => React.createElement('div', { 'data-testid': 'mock-toaster' }) };
@@ -51,20 +49,20 @@ describe('About page integration tests', () => {
 		jest.clearAllMocks();
 	});
 
-	it('renders About with real Layout: check for header/footer content, image details, text and title', async () => {
+	it('renders About with Layout, checking for header/footer content, image details, text and title', async () => {
 		render(
 			React.createElement(MemoryRouter, null, React.createElement(About, null))
 		);
 
-		// content
 		expect(screen.getByText('Add text')).toBeInTheDocument();
-
+		
+		//check img details
 		const img = screen.getByAltText('contactus');
 		expect(img).toBeInTheDocument();
 		expect(img).toHaveAttribute('src', '/images/about.jpeg');
 		expect(img.style.width).toBe('100%');
 
-		// integration: header/footer presence (tolerant selectors)
+		//check header/footer presence (a bit broad just to make sure they're there)
 		expect(
 			document.querySelector('header') || document.querySelector('nav') || document.querySelector('[data-testid="header"]')
 		).toBeTruthy();
@@ -72,31 +70,11 @@ describe('About page integration tests', () => {
 			document.querySelector('footer') || document.querySelector('.footer') || document.querySelector('[data-testid="footer"]')
 		).toBeTruthy();
 
-		// Helmet side-effect: title set
-			await waitFor(() => {
-				const titleEl = document.querySelector('title');
-				const titleText = titleEl ? titleEl.textContent : document.title;
-				expect(titleText).toBe('TEST_TITLE');
-			});
-	});
-
-	it('rendering Layout with defaults', async () => {
-		// import Layout dynamically so it uses the same mocked Helmet
-		const Layout = require('../components/Layout').default;
-
-		render(
-			React.createElement(MemoryRouter, null, React.createElement(Layout, null, React.createElement('div', null, 'DefaultChild')))
-		);
-
-		expect(screen.getByText('DefaultChild')).toBeInTheDocument();
-
-			await waitFor(() => {
-				const titleEl = document.querySelector('title');
-				const titleText = titleEl ? titleEl.textContent : document.title;
-				expect(titleText).toBe('TEST_TITLE');
-
-				const desc = document.querySelector('meta[name="description"]');
-				expect(desc && desc.content).toBe('TEST_CONTENT');
-			});
+		//check title after render
+		await waitFor(() => {
+			const titleEl = document.querySelector('title');
+			const titleText = titleEl ? titleEl.textContent : document.title;
+			expect(titleText).toBe('TEST_TITLE');
+		});
 	});
 });
