@@ -116,8 +116,8 @@ describe('Profile', () => {
   // 7. Submits form and handles error response from API
   it('handles error response from API', async () => {
     axios.put.mockResolvedValue({
-      data: { error: true, error: 'API Error' },
-    });
+      data: {error: 'API Error' },
+    }); //data: { error: true, error: 'API Error' }
     const { getByText } = render(<Profile />);
     fireEvent.click(getByText('UPDATE'));
     await waitFor(() => {
@@ -137,7 +137,6 @@ describe('Profile', () => {
 
   // 9. Email input is enabled when custom emailDisabled prop is set to false
   it('should allow typing in email field when not disabled', () => {
-    console.log("Running new test");
     const { getByPlaceholderText } = render(<Profile emailDisabled={false} />);
     const emailInput = getByPlaceholderText('Enter Your Email');
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
