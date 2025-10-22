@@ -61,7 +61,8 @@ const Header = () => {
                     </Link>
                   </li>
                   {categories?.map((c) => (
-                    <li key = {c._id}> // Daniel: added unique key prop, using id
+                    // Daniel: added unique key prop, using id
+                    <li key={c._id}>
                       <Link
                         className="dropdown-item"
                         to={`/category/${c.slug}`}
