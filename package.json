@@ -12,7 +12,18 @@
     "sonarqube": "sonarqube-scanner",
     "test": "npm run test:backend && npm run test:frontend",
     "test:frontend": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.frontend.config.js",
-    "test:backend": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.backend.config.js"
+    "test:backend": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.backend.config.js",
+    "test:ui": "playwright test",
+    "test:ui:interactive": "playwright test --ui",
+    "test:ui:headed": "playwright test --headed",
+    "test:ui:debug": "playwright test --debug",
+    "test:ui:chromium": "playwright test --project=chromium",
+    "test:ui:firefox": "playwright test --project=firefox",
+    "test:ui:webkit": "playwright test --project=webkit",
+    "test:all": "npm run test:backend && npm run test:frontend && npm run test:ui",
+    "playwright:report": "playwright show-report playwright-report",
+    "playwright:codegen": "playwright codegen http://localhost:3000",
+    "sonarqube": "sonar-scanner"
   },
   "keywords": [],
   "author": "RP",
@@ -47,7 +58,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "mongodb-memory-server": "^10.2.3",
-    "sonarqube-scanner": "^3.3.0",
+    "sonarqube-scanner": "^4.3.2",
     "supertest": "^7.1.4"
   }
 }
