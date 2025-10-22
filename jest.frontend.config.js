@@ -28,6 +28,7 @@ export default {
   // jest code coverage
   // Daniel: Updated collectCoverageFrom from pages/Auth/*.js to pages/**/*.js to include all js files in pages directory
   collectCoverage: true,
+  coverageDirectory: "<rootDir>/coverage/frontend",
   collectCoverageFrom: [
     "<rootDir>/client/src/**/*.js",
     "!<rootDir>/client/src/**/*.test.js",
