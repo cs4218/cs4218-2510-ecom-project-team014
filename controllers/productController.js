@@ -40,7 +40,7 @@ export const createProductController = async (req, res) => {
           .send({ error: "photo is Required and should be less then 1mb" });
     }
 
-    const products = new productModel({ ...req.fields, slug: slugify(name) });
+    const products = new productModel({ ...req.fields, name: String(name), description: String(description), price: Number(price), category: String(category), quantity: Number(quantity),slug: slugify(name) });
     if (photo) {
       products.photo.data = fs.readFileSync(photo.path);
       products.photo.contentType = photo.type;
@@ -365,27 +365,23 @@ export const brainTreePaymentController = async (req, res) => {
   try {
     const { nonce, cart } = req.body;
     if (!cart || cart.length === 0) {
-      return res.status(500).send({ ok: false, message: "No items in cart." });
-    }
-
-    // Validate prices values first
-    for (const item of cart) {
-      if (item.price < 0 || Number.isNaN(Number(item.price))) {
-        return res
-          .status(400)
-          .send({ ok: false, message: "Invalid price for item" });
-      }
+      return res.status(400).send({ok: false, message: "No items in cart."})
     }
 
     // Batch query to fetch all products from DB at once
     const productIds = cart.map((item) => item._id);
     const products = await productModel.find({ _id: { $in: productIds } });
+
     // Create a map for quick lookups
     const productMap = new Map();
     products.forEach((product) => {
       productMap.set(product._id.toString(), product);
     });
-    // Validate all items against the fetched products
+
+    // Validate all items against the fetched products and calculate total using DB prices
+    let total = 0;
+    const validatedCart = [];
+
     for (const item of cart) {
       const product = productMap.get(item._id.toString());
 
@@ -395,6 +391,22 @@ export const brainTreePaymentController = async (req, res) => {
           message: `Product with ID ${item._id} not found`,
         });
       }
+
+      // Validate price from database (security fix)
+      if (product.price < 0 || Number.isNaN(Number(product.price))) {
+        return res.status(400).send({ok: false, message: `Invalid price for product ${product.name}`})
+      }
+
+      // CRITICAL SECURITY: Reject if client-provided price doesn't match DB price
+      // Note: This makes price optional in the cart, but we want to enforce the client
+      // to include it so that there is never any confusion about the total price between client and our DB source of truth.
+      if (item.price !== undefined && item.price !== product.price) {
+        return res.status(400).send({
+          ok: false,
+          message: `Price mismatch for product ${product.name}. Expected: ${product.price}, Received: ${item.price}`
+        })
+      }
+
       // Check if requested quantity is available
       const requestedQuantity = item.quantity || 1;
       if (!product.quantity || product.quantity < requestedQuantity) {
@@ -403,19 +415,24 @@ export const brainTreePaymentController = async (req, res) => {
           message: `Insufficient stock for ${product.name}. Available: ${product.quantity}, Requested: ${requestedQuantity}`,
         });
       }
+
+      // CRITICAL FIX: use the price from DB, not the client-provided cart
+      total += product.price * requestedQuantity;
+
+      validatedCart.push({
+        product: product._id,
+        name: product.name,
+        price: product.price,
+        quantity: requestedQuantity
+      });
     }
 
-    let total = 0;
-    cart.map((i) => {
-      total += i.price * i.quantity;
-    });
     // We assume that $0 transactions (e.g. discounts, free items etc.) are not allowed at the moment
     if (total === 0) {
-      return res
-        .status(500)
-        .json({ ok: false, message: "Total transaction amount cannot be $0." });
+      return res.status(400).json({ok: false, message: "Total transaction amount cannot be $0."})
     }
-    let newTransaction = gateway.transaction.sale(
+
+    gateway.transaction.sale(
       {
         amount: total,
         paymentMethodNonce: nonce,
@@ -425,21 +442,31 @@ export const brainTreePaymentController = async (req, res) => {
       },
       async function (error, result) {
         if (result) {
-          const order = new orderModel({
-            products: cart,
-            payment: result,
-            buyer: req.user._id,
-          }).save();
-          const bulkOps = cart.map((item) => ({
-            updateOne: {
-              filter: { _id: item._id },
-              update: { $inc: { quantity: -(item.quantity || 1) } },
-            },
-          }));
+          try {
+            // FIX: Await order creation to avoid race conditions
+            const order = await new orderModel({
+              products: validatedCart.map(item => item.product),
+              payment: result,
+              buyer: req.user._id,
+            }).save();
 
-          await productModel.bulkWrite(bulkOps);
+            // decrement inventory (in bulk, to avoid mongo N+1 query)
+            const bulkOps = validatedCart.map(item => ({
+              updateOne: {
+                filter: { _id: item.product },
+                update: { $inc: { quantity: -item.quantity } }
+              }
+            }));
 
-          res.json({ ok: true });
+            await productModel.bulkWrite(bulkOps);
+
+            res.json({ ok: true });
+          } catch (dbError) {
+            console.log('Database error after payment:', dbError);
+            // payment succeeded but database operation failed
+            // needs manual intervention (out of scope of the app, as payment has already been processed)
+            res.status(500).send({ok: false, message: "Payment processed but order recording failed. Please contact support."});
+          }
         } else {
           res.status(500).send(error);
         }
@@ -447,5 +474,6 @@ export const brainTreePaymentController = async (req, res) => {
     );
   } catch (error) {
     console.log(error);
+    res.status(500).send({ok: false, message: "An error occurred processing your payment."});
   }
 };

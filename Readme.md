@@ -151,6 +151,7 @@ https://github.com/cs4218/cs4218-2510-ecom-project-team014/actions/runs/17570205
 
 ## Yu Miao
 ## Test cases are generated with the help from AI
+## MS1
 1. Admin Actions
    - pages/admin/CreateCategory.js
    - pages/admin/CreateProduct.js
@@ -172,14 +173,40 @@ https://github.com/cs4218/cs4218-2510-ecom-project-team014/actions/runs/17570205
    - components/UserMenu.js
    - pages/user/Dashboard.js
    - models/userModel.js
+## MS2
+1. Integration Test
+   - pages/admin/CreateCategory.test.js
+   - controllers/categoryController.test.js - createCategoryController, updateCategoryController, deleteCategoryController
+   - pages/admin/CreateProduct.test.js
+   - pages/admin/UpdateProduct.test.js
+   - pages/admin/Product.test.js
+   - controllers/productController.test.js - createProductController, deleteProductController, updateProductController
+   - pages/admin/AdminOrders.test.js
+
+2. UI Test
+   - Components/Form/CategoryForm.test.js and pages/admin/CreateCategory.test.js
+   - pages/admin/CreateProduct.test.js
+   - pages/admin/UpdateProduct.test.js
+   - pages/admin/Product.test.js
+   - pages/admin/AdminOrders.test.js
 
 
-**Project Workload for Milestone 1**
-**WONG XU CHENG**
+## WONG XU CHENG
+## Tests are generated with the help of AI
+## Milestone 1
    - Write unit tests for Protected Routes feature 
    - Write unit tests for Registrtion feature 
    - Write unit tests for Login feature
    - Write unit tests for Admin Dashboard feature
+
+## Milestone 2
+   - Write integration tests for Protected Routes feature 
+   - Write integration tests for Registrtion feature 
+   - Write integration tests for Login feature
+   - Write integration tests for Admin Dashboard feature
+   - Write UI tests for Login Page
+   - Write UI tests for Registration Page
+   - Write UI tests for Admin Dashboard Page
 
 Project Milestone 1 Testing Scope - Dedrick Poh Kai Kiat
 1. hooks/useCategory.js
@@ -192,3 +219,12 @@ Project Milestone 1 Testing Scope - Dedrick Poh Kai Kiat
 8. controllers/categoryController.js - Only categoryController, singleCategoryController
 9. controllers/productController.js - Only getProductController, getSingleProductController, productPhotoController, productFiltersController, productCountController, productListController, searchProductController, realtedProductController, productCategoryController
 
+Project Milestone 1 Testing Scope - Daniel David Zhang
+1. components/pages/user/Order.js
+2. components/pages/user/Profile.js
+3. components/Footer.js
+4. components/Header.js
+5. components/Layout.js
+6. components/Spinner.js
+7. components/pages/About.js
+8. components.pages/Pagenotfound.js
