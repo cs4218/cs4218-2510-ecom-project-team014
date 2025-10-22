@@ -548,3 +548,217 @@ test.describe("User can only login with valid combination of credentials", () =>
     await expect(page.getByText(/all products/i)).toBeVisible();
   });
 });
+
+test.describe("AuthZ: regular user blocked from admin pages", () => {
+  const BASE = "http://localhost:3000";
+  const adminPaths = [
+    "/dashboard/admin",
+    "/dashboard/admin/create-category",
+    "/dashboard/admin/create-product",
+    "/dashboard/admin/products",
+    "/dashboard/admin/orders",
+    "/dashboard/admin/users",
+  ];
+  test.beforeEach(async ({ page }) => {
+    // Login as a regular user
+    await page.goto(`${BASE}/login`);
+    await page
+      .getByRole("textbox", { name: /enter your email/i })
+      .fill("test001@email.com");
+    await page
+      .getByRole("textbox", { name: /enter your password/i })
+      .fill("123456");
+    await page.getByRole("button", { name: /login/i }).click();
+    await expect(page.getByText(/all products/i)).toBeVisible();
+  });
+
+  for (const path of adminPaths) {
+    test(`renders 401 (blocked): ${path}`, async ({ page }) => {
+      // 1) Assert at least one 401 occurs during navigation/auth check
+      const wait401 = page.waitForResponse(
+        (res) =>
+          res.status() === 401 &&
+          /\/(auth|dashboard|admin|api)\//i.test(res.url())
+      );
+
+      const nav = page.goto(`${BASE}${path}`, {
+        waitUntil: "domcontentloaded",
+      });
+
+      await Promise.all([wait401, nav]);
+
+      // 2) If a dev overlay iframe appears, assert the 401 text inside it
+      //    Common titles/ids used by CRA/Vite overlays:
+      const overlayFrame = page.frameLocator(
+        'iframe[title*="Runtime error"], iframe#webpack-dev-server-client-overlay'
+      );
+
+      // Try to assert 401 text inside overlay if the iframe exists; otherwise skip
+      const overlayExists = await overlayFrame.locator("body").count();
+      if (overlayExists > 0) {
+        await expect(
+          overlayFrame.getByText(/request failed with status code 401/i)
+        ).toBeVisible({ timeout: 10000 });
+        // Optional heading:
+        // await expect(overlayFrame.getByText(/^uncaught runtime errors:/i)).toBeVisible();
+      } else {
+        // If no overlay, still assert some unauthorized text on the page if your app renders one
+        const denial = page.getByText(
+          /(401|unauthorized|access denied|forbidden|not authorized)/i
+        );
+        if (await denial.count()) {
+          await expect(denial.first()).toBeVisible();
+        }
+      }
+
+      // 3) Ensure no admin UI renders
+      await expect(
+        page.getByRole("heading", { name: /admin panel/i })
+      ).toHaveCount(0);
+    });
+  }
+});
+
+const BASE = "http://localhost:3000";
+const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+test.describe("Search results interactions", () => {
+  test.beforeEach(async ({ page }) => {
+    // Login first so "ADD TO CART" is allowed
+    await page.goto(`${BASE}/login`);
+    await page
+      .getByRole("textbox", { name: /enter your email/i })
+      .fill("test001@email.com");
+    await page
+      .getByRole("textbox", { name: /enter your password/i })
+      .fill("123456");
+    await page.getByRole("button", { name: /login/i }).click();
+
+    // Land on home
+    await expect(page.getByRole("link", { name: /home/i })).toBeVisible();
+  });
+
+  test("Add to cart from search results", async ({ page }) => {
+    // 1) Search for "book" from the homepage
+    await page.getByRole("searchbox", { name: /search/i }).fill("book");
+    await page.getByRole("button", { name: /^search$/i }).click();
+
+    // 2) Verify search results page and cards rendered
+
+    await Promise.all([
+      page.waitForURL(/\/search/i), // or whatever your search route is
+      page.getByRole("button", { name: /^search$/i }).click(),
+    ]);
+
+    // Give the page a moment to render results (SPA fetch)
+    await page.waitForLoadState("networkidle");
+
+    // Assert the heading in a role-agnostic way (any h1..h6 with that text)
+    const resultsHeading = page
+      .locator("h1,h2,h3,h4,h5,h6")
+      .filter({ hasText: /^\s*Search Results\s*$/i });
+
+    await expect(resultsHeading).toBeVisible({ timeout: 10_000 });
+
+    const cards = page.locator('.card:has(button:has-text("ADD TO CART"))');
+    await expect(cards.first()).toBeVisible();
+
+    // Capture product name from the first result card
+    const firstCard = cards.first();
+    const title = (
+      await firstCard.locator(".card-title").first().innerText()
+    ).trim();
+    const alt = (
+      await firstCard.locator("img.card-img-top").getAttribute("alt")
+    )?.trim();
+    const productName = (title || alt || "").trim();
+    expect(productName).not.toBe("");
+
+    // 3) Add to cart from the card
+    await Promise.all([
+      page.waitForLoadState("networkidle"),
+      firstCard.getByRole("button", { name: /add to cart/i }).click(),
+    ]);
+
+    // 4) Go to Cart and assert item present
+    await Promise.all([
+      page.waitForURL(/\/cart/i),
+      page.getByRole("link", { name: /cart/i }).click(),
+    ]);
+    await page.waitForSelector(".cart-summary, .mt-2 img, .cart-item", {
+      timeout: 10000,
+    });
+
+    // Prefer image alt match; also allow text match as fallback
+    await expect(
+      page.getByRole("img", {
+        name: new RegExp(`^${escapeRe(productName)}$`, "i"),
+      })
+    ).toBeVisible({ timeout: 10000 });
+    await expect(
+      page.getByText(new RegExp(`^\\s*${escapeRe(productName)}\\s*$`, "i"))
+    ).toBeVisible({ timeout: 10_000 });
+  });
+
+  test('Open product details via "More Details" from search results', async ({
+    page,
+  }) => {
+    // 1) Search for "book"
+    await page.getByRole("searchbox", { name: /search/i }).fill("book");
+    await page.getByRole("button", { name: /^search$/i }).click();
+    await Promise.all([
+      page.waitForURL(/\/search/i), // or whatever your search route is
+      page.getByRole("button", { name: /^search$/i }).click(),
+    ]);
+
+    // Give the page a moment to render results (SPA fetch)
+    await page.waitForLoadState("networkidle");
+
+    // Assert the heading in a role-agnostic way (any h1..h6 with that text)
+    const resultsHeading = page
+      .locator("h1,h2,h3,h4,h5,h6")
+      .filter({ hasText: /^\s*Search Results\s*$/i });
+
+    await expect(resultsHeading).toBeVisible({ timeout: 10_000 });
+
+    // 2) Grab the first result card + its name
+    const cards = page.locator('.card:has(button:has-text("More Details"))');
+    await expect(cards.first()).toBeVisible();
+
+    const firstCard = cards.first();
+    const title = (
+      await firstCard.locator(".card-title").first().innerText()
+    ).trim();
+    const alt = (
+      await firstCard.locator("img.card-img-top").getAttribute("alt")
+    )?.trim();
+    const resultName = (title || alt || "").trim();
+    expect(resultName).not.toBe("");
+
+    // 3) Click "More Details" inside that card
+    await Promise.all([
+      page.waitForURL(/\/product\//i),
+      firstCard.getByRole("button", { name: /more details/i }).click(),
+    ]);
+
+    // 4) Assert we’re on product details and the name matches
+    await expect(
+      page.getByRole("heading", { name: /product details/i })
+    ).toBeVisible();
+
+    // Wait for navigation + data to load
+    await expect(page).toHaveURL(/\/product\//i);
+    await page.waitForLoadState("networkidle"); // allows the product fetch to complete
+
+    // Find the "Name :" line inside the details column and assert exact text
+    const nameLine = page
+      .locator(".product-details-info h6") // all h6 in the details section
+      .filter({ hasText: /^Name\s*:/i }); // the "Name :" row
+
+    await expect(nameLine).toBeVisible({ timeout: 10_000 });
+    await expect(nameLine).toHaveText(
+      new RegExp(`^\\s*Name\\s*:\\s*${escapeRe(resultName)}\\s*$`, "i"),
+      { timeout: 10_000 }
+    );
+  });
+});
