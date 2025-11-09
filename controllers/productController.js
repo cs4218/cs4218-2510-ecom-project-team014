@@ -279,11 +279,13 @@ export const searchProductController = async (req, res) => {
       return res.json([]);
     }
     const trimmedKeyword = keyword.trim();
+    // escape regex wildcards
+    const escapedKeyword = trimmedKeyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const resutls = await productModel
       .find({
         $or: [
-          { name: { $regex: trimmedKeyword, $options: "i" } },
-          { description: { $regex: trimmedKeyword, $options: "i" } },
+          { name: { $regex: escapedKeyword, $options: "i" } },
+          { description: { $regex: escapedKeyword, $options: "i" } },
         ],
       })
       .select("-photo");
