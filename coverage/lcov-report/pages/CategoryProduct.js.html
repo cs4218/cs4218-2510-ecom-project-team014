@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>17/17</span>
+                <span class='fraction'>0/17</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>6/6</span>
+                <span class='fraction'>0/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>0/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>16/16</span>
+                <span class='fraction'>0/16</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -170,39 +170,37 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">11x</span>
-<span class="cline-any cline-yes">11x</span>
-<span class="cline-any cline-yes">11x</span>
-<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">11x</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">11x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -223,7 +221,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -272,28 +272,28 @@ import Layout from "../components/Layout";
 import { useParams, useNavigate } from "react-router-dom";
 import "../styles/CategoryProductStyles.css";
 import axios from "axios";
-const CategoryProduct = () =&gt; {
-  const params = useParams();
-  const navigate = useNavigate();
-  const [products, setProducts] = useState([]);
-  const [category, setCategory] = useState([]);
+const CategoryProduct = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+  const params = <span class="cstat-no" title="statement not covered" >useParams();</span>
+  const navigate = <span class="cstat-no" title="statement not covered" >useNavigate();</span>
+  const [products, setProducts] = <span class="cstat-no" title="statement not covered" >useState([]);</span>
+  const [category, setCategory] = <span class="cstat-no" title="statement not covered" >useState([]);</span>
 &nbsp;
-  useEffect(() =&gt; {
-    if (params?.slug) getPrductsByCat();
+<span class="cstat-no" title="statement not covered" >  useEffect(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    if (params?.slug) <span class="cstat-no" title="statement not covered" >getPrductsByCat();</span></span>
   }, [params?.slug]);
-  const getPrductsByCat = async () =&gt; {
-    try {
-      const { data } = await axios.get(
+  const getPrductsByCat = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+      const { data } = <span class="cstat-no" title="statement not covered" >await axios.get(</span>
         `/api/v1/product/product-category/${params.slug}`
       );
-      setProducts(Array.isArray(data?.products) ? data.products : []);
-      setCategory(data?.category);
+<span class="cstat-no" title="statement not covered" >      setProducts(Array.isArray(data?.products) ? data.products : []);</span>
+<span class="cstat-no" title="statement not covered" >      setCategory(data?.category);</span>
     } catch (error) {
-      console.log(error);
+<span class="cstat-no" title="statement not covered" >      console.log(error);</span>
     }
   };
 &nbsp;
-  return (
+<span class="cstat-no" title="statement not covered" >  return (</span>
     &lt;Layout&gt;
       &lt;div className="container mt-3 category"&gt;
         &lt;h4 className="text-center"&gt;Category - {category?.name}&lt;/h4&gt;
@@ -301,8 +301,8 @@ const CategoryProduct = () =&gt; {
         &lt;div className="row"&gt;
           &lt;div className="col-md-9 offset-1"&gt;
             &lt;div className="d-flex flex-wrap"&gt;
-              {products?.map((p) =&gt; (
-                &lt;div className="card m-2" key={p._id}&gt;
+              {products?.map(<span class="fstat-no" title="function not covered" >(p</span>) =&gt; (
+<span class="cstat-no" title="statement not covered" >                &lt;div className="card m-2" key={p._id}&gt;</span>
                   &lt;img
                     src={`/api/v1/product/product-photo/${p._id}`}
                     className="card-img-top"
@@ -324,8 +324,8 @@ const CategoryProduct = () =&gt; {
                     &lt;div className="card-name-price"&gt;
                       &lt;button
                         className="btn btn-info ms-1"
-                        onClick={() =&gt;
-                          p?.slug &amp;&amp; navigate(`/product/${p.slug}`)
+                        onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt;
+<span class="cstat-no" title="statement not covered" >                          p?.slug &amp;&amp; navigate(`/product/${p.slug}`)</span>
                         }
                       &gt;
                         More Details
@@ -376,6 +376,7 @@ export default CategoryProduct;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2025-10-20T07:18:01.656Z
                 at 2025-10-21T00:33:42.584Z
             </div>
         <script src="../prettify.js"></script>

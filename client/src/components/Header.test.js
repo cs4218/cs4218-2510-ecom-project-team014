@@ -50,7 +50,6 @@ describe('Header exhaustive test cases', () => {
 
   // 1. Null, Empty, None
   it('TC1: Null auth, empty cart, no categories', () => {
-    console.log("Header tests v10");
     setMocks(null, cartEmpty, categoryNone);
     const { getByText, getByTestId } = render(<MemoryRouter><Header /></MemoryRouter>);
     expect(getByText('Register')).toBeInTheDocument();
