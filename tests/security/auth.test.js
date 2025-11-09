@@ -264,5 +264,91 @@ describe('JWT Security Tests - Token Tampering', () => {
 
 
   });
+
+  describe('Admin JWT Tampering Attack Tests', () => {
+    let regularUser;
+    let adminUser;
+    let regularUserToken;
+
+    beforeAll(async () => {
+      regularUser = await userModel.findOne({ role: 0 });
+      if (!regularUser) {
+        throw new Error('No regular user found in sample data');
+      }
+
+      adminUser = await userModel.findOne({ role: 1 });
+      if (!adminUser) {
+        throw new Error('No admin user found in sample data');
+      }
+
+      regularUserToken = jwt.sign(
+        { _id: regularUser._id },
+        process.env.JWT_SECRET,
+        { expiresIn: '7d' }
+      );
+    });
+
+    it('should reject when regular user tampers token to use admin user ID without re-signing', async () => {
+      // regular user mimics admin privileges by changing their JWT token _id to admin's _id
+      const tokenParts = regularUserToken.split('.');
+
+      const payload = JSON.parse(Buffer.from(tokenParts[1], 'base64').toString());
+      payload._id = adminUser._id.toString(); // Change to admin's ID
+
+      const tamperedPayload = Buffer.from(JSON.stringify(payload)).toString('base64')
+        .replace(/=/g, '')
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_');
+
+      const tamperedToken = `${tokenParts[0]}.${tamperedPayload}.${tokenParts[2]}`;
+
+      // call admin-only endpoint
+      const response = await request(app)
+        .get('/api/v1/auth/admin-auth')
+        .set('Authorization', tamperedToken);
+
+      expect(response.status).toBe(401);
+      expect(response.body.success).toBe(false);
+    });
+
+    it('should reject when regular user tampers token to access all orders without re-signing', async () => {
+      // Similar tampering (replace token _id with admin _id)
+      const tokenParts = regularUserToken.split('.');
+
+      const payload = JSON.parse(Buffer.from(tokenParts[1], 'base64').toString());
+      payload._id = adminUser._id.toString(); // Change to admin's ID
+
+      const tamperedPayload = Buffer.from(JSON.stringify(payload)).toString('base64')
+        .replace(/=/g, '')
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_');
+
+      const tamperedToken = `${tokenParts[0]}.${tamperedPayload}.${tokenParts[2]}`;
+
+      // admin-only endpoint
+      const response = await request(app)
+        .get('/api/v1/auth/all-orders')
+        .set('Authorization', tamperedToken);
+
+      expect(response.status).toBe(401);
+      expect(response.body.success).toBe(false);
+    });
+
+    it('should allow legitimate admin access with valid token', async () => {
+      // happy path with proper admin token
+      const validAdminToken = jwt.sign(
+        { _id: adminUser._id },
+        process.env.JWT_SECRET,
+        { expiresIn: '7d' }
+      );
+
+      const response = await request(app)
+        .get('/api/v1/auth/admin-auth')
+        .set('Authorization', validAdminToken);
+
+      expect(response.status).toBe(200);
+      expect(response.body.ok).toBe(true);
+    });
+  });
 });
 
