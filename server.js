@@ -1,5 +1,4 @@
 // server.js
-import app from "./app.js";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import connectDB from "./config/db.js";
@@ -11,6 +10,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import { populateData } from './sample_data/populate_db.js';
 import fs from 'fs';
 import colors from "colors"; // if needed
+import express from 'express'
 
 dotenv.config();
 
