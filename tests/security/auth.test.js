@@ -133,7 +133,7 @@ describe('JWT Security Tests - Token Tampering', () => {
       });
     });
 
-    it('should not return other users\' tokens when using user1\'s token', async () => {
+    it('should not return other users\' data when using user1\'s token', async () => {
       // User1 tries to access their orders with their valid token
       const response = await request(app)
         .get('/api/v1/auth/orders')

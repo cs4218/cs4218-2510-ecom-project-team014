@@ -61,15 +61,15 @@ describe('NoSql injection tests for search endpoint', () => {
     });
 
     it('should reject NoSQL injection attempt using $regex with malicious pattern', async () => {
-      // Attempt to use $regex injection to match everything
+      // try to match everything
       const payload = encodeURIComponent('{"$regex":".*"}');
       const response = await request(app)
         .get(`/api/v1/product/search/${payload}`);
 
-      // Should treat it as a literal string search
+      // seach it as  a literal string
       expect(response.status).toBe(200);
+      // should not return all products
       expect(Array.isArray(response.body)).toBe(true);
-      // Should not return all products
       expect(response.body.length).toBe(0);
     });
 
@@ -80,7 +80,7 @@ describe('NoSql injection tests for search endpoint', () => {
 
       expect(response.status).toBe(200);
       expect(Array.isArray(response.body)).toBe(true);
-      // Should not return all products with price > 0
+      // should not return all products with price > 0
       expect(response.body.length).toBe(0);
     });
 
